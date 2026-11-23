@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Natal 2026 · Confirme sua presença</title>
+<meta name="description" content="Ceia de Natal na casa do Matheus e da Madu, 24/12 a partir das 21h. Confirme quem vem e veja o valor por pessoa.">
+<meta property="og:title" content="Natal 2026 · Confirme sua presença">
+<meta property="og:description" content="Ceia de Natal, 24/12 a partir das 21h. Confirme até 03/12 e veja o valor por pessoa.">
+<meta property="og:image" content="og.png">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#7a1420">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --vinho:#7a1420; --vinho-esc:#4e0b14; --verde:#14532d; --verde-claro:#e7f3ea;
+    --ouro:#c9962b; --ouro-claro:#f6e7c1; --creme:#fffaf0; --tinta:#2a1d1a; --suave:#6b5a55;
+    --linha:#ead9c6; --erro:#b42318;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family:"Nunito Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    color:var(--tinta); font-size:17px; line-height:1.5;
+    background:
+      radial-gradient(1200px 600px at 50% -200px,#a3202f 0%,transparent 70%),
+      linear-gradient(180deg,var(--vinho) 0%,var(--vinho-esc) 100%);
+    min-height:100vh;
+  }
+  html{background:var(--vinho-esc)}
+  .neve{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+  .neve i{position:absolute;top:-10px;width:6px;height:6px;border-radius:50%;background:#fff;opacity:.55;animation:cair linear infinite}
+  @keyframes cair{to{transform:translateY(105vh) translateX(30px)}}
+  @media (prefers-reduced-motion:reduce){.neve{display:none}}
+
+  .wrap{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:28px 16px 48px}
+  header{text-align:center;color:#fff;padding:8px 8px 22px}
+  .estrela{font-size:34px;line-height:1;color:var(--ouro);filter:drop-shadow(0 0 10px rgba(255,210,120,.6))}
+  .sobre{letter-spacing:.18em;text-transform:uppercase;font-size:12px;font-weight:800;color:var(--ouro-claro);margin:10px 0 4px}
+  h1{font-family:Fraunces,Georgia,serif;font-weight:700;font-size:44px;line-height:1.05;margin:0 0 10px}
+  .quando{display:inline-flex;gap:8px;align-items:center;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);
+    padding:8px 14px;border-radius:999px;font-weight:700;font-size:15px}
+  .contador{margin-top:12px;font-size:14px;color:var(--ouro-claro);min-height:21px}
+
+  .card{background:var(--creme);border-radius:20px;padding:22px 20px;margin-bottom:16px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  .card h2{font-family:Fraunces,Georgia,serif;font-size:23px;margin:0 0 6px;color:var(--vinho)}
+  .card p{margin:0 0 10px}
+  .muted{color:var(--suave);font-size:15px}
+
+  .faixas{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0 6px}
+  .faixa{border:1.5px solid var(--linha);border-radius:14px;padding:12px;background:#fff}
+  .faixa .nome{font-weight:800}
+  .faixa .idade{font-size:14px;color:var(--suave)}
+  .faixa .valor{font-family:Fraunces,Georgia,serif;font-size:26px;font-weight:700;color:var(--verde);margin-top:4px}
+  .faixa .valor small{font-family:"Nunito Sans",sans-serif;font-size:13px;font-weight:700;color:var(--suave)}
+  .faixa.adulto{border-color:var(--ouro);background:var(--ouro-claro)}
+
+  .prazo{display:flex;gap:12px;align-items:flex-start;background:var(--verde-claro);border-radius:14px;padding:12px 14px;margin-top:12px}
+  .prazo b{color:var(--verde)}
+
+  .escolha{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+  button{font:inherit;cursor:pointer}
+  .opcao{border:2px solid var(--linha);background:#fff;border-radius:16px;padding:16px 10px;font-weight:800;font-size:17px;color:var(--tinta)}
+  .opcao span{display:block;font-size:26px;margin-bottom:4px}
+  .opcao[aria-pressed="true"]{border-color:var(--verde);background:var(--verde-claro);color:var(--verde)}
+  .opcao.nao[aria-pressed="true"]{border-color:var(--vinho);background:#fbeaea;color:var(--vinho)}
+
+  label{display:block;font-weight:700;font-size:15px;margin:14px 0 6px}
+  input,textarea{width:100%;font:inherit;font-size:17px;padding:13px 14px;border:1.5px solid var(--linha);border-radius:12px;background:#fff;color:var(--tinta)}
+  input:focus,textarea:focus{outline:none;border-color:var(--ouro);box-shadow:0 0 0 3px rgba(201,150,43,.25)}
+  textarea{min-height:80px;resize:vertical}
+
+  .pessoa{display:grid;grid-template-columns:1fr 84px 40px;gap:8px;align-items:end;padding:12px 0;border-bottom:1px dashed var(--linha)}
+  .pessoa label{margin:0 0 4px;font-size:13px;color:var(--suave)}
+  .pessoa .info{grid-column:1/-1;font-size:14px;font-weight:700;color:var(--suave);min-height:20px}
+  .pessoa .info.ok{color:var(--verde)}
+  .remover{height:50px;border:0;background:transparent;color:var(--suave);font-size:22px;border-radius:10px}
+  .remover:hover{background:#f3e7dc}
+  .add{margin-top:12px;width:100%;border:2px dashed var(--ouro);background:transparent;color:var(--vinho);border-radius:12px;padding:12px;font-weight:800}
+
+  .total{margin-top:16px;background:var(--vinho);color:#fff;border-radius:16px;padding:16px 18px}
+  .total .linha{display:flex;justify-content:space-between;font-size:15px;opacity:.9;padding:2px 0}
+  .total .grande{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid rgba(255,255,255,.25);margin-top:8px;padding-top:10px}
+  .total .grande b{font-family:Fraunces,Georgia,serif;font-size:32px}
+  .aviso-pag{font-size:14px;color:var(--suave);margin-top:10px}
+
+  .enviar{width:100%;margin-top:18px;border:0;border-radius:14px;padding:17px;font-weight:800;font-size:18px;color:#fff;
+    background:linear-gradient(180deg,#1d7a43,var(--verde));box-shadow:0 6px 16px rgba(20,83,45,.35)}
+  .enviar:disabled{opacity:.6;cursor:wait}
+  .enviar.nao{background:linear-gradient(180deg,#9c1d2c,var(--vinho));box-shadow:0 6px 16px rgba(122,20,32,.35)}
+  .erro{color:var(--erro);font-weight:700;font-size:15px;margin-top:10px;min-height:1px}
+  .oculto{display:none!important}
+
+  .sucesso{text-align:center}
+  .sucesso .grande-emoji{font-size:52px}
+  .resumo-final{text-align:left;background:#fff;border:1.5px solid var(--linha);border-radius:14px;padding:12px 14px;margin:14px 0}
+  .resumo-final div{display:flex;justify-content:space-between;padding:3px 0;font-size:15px}
+  footer{text-align:center;color:var(--ouro-claro);font-size:14px;margin-top:22px}
+</style>
+</head>
+<body>
+<div class="neve" aria-hidden="true" id="neve"></div>
+<div class="wrap">
+  <header>
+    <div class="estrela">★</div>
+    <div class="sobre">Ceia na casa do Matheus e da Madu</div>
+    <h1>Natal 2026</h1>
+    <div class="quando">🎄 24 de dezembro · a partir das 21h</div>
+    <div class="contador" id="contador"></div>
+  </header>
+
+  <section class="card">
+    <h2>Como funciona a divisão</h2>
+    <p>A ceia, as bebidas e a decoração são divididas entre todo mundo. A casa é por nossa conta. 😊</p>
+    <p class="muted">O valor é por pessoa e depende da idade:</p>
+    <div class="faixas" id="faixas"></div>
+    <div class="prazo">
+      <div>📅</div>
+      <div>Confirme <b>até 3 de dezembro</b>. Precisamos fechar o número de pessoas para encomendar a ceia a tempo.</div>
+    </div>
+  </section>
+
+  <section class="card" id="form-card">
+    <h2>Você vem?</h2>
+    <div class="escolha">
+      <button type="button" class="opcao" id="btn-sim" aria-pressed="false"><span>🎉</span>Sim, vou!</button>
+      <button type="button" class="opcao nao" id="btn-nao" aria-pressed="false"><span>😢</span>Não vou conseguir</button>
+    </div>
+
+    <form id="form" class="oculto" novalidate>
+      <label for="responsavel">Seu nome</label>
+      <input id="responsavel" autocomplete="name" maxlength="80" placeholder="Ex.: Maria Silva">
+
+      <label for="whatsapp">Seu WhatsApp</label>
+      <input id="whatsapp" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="(68) 9 9999-9999">
+
+      <div id="bloco-pessoas">
+        <label style="margin-top:20px">Quem vem (inclua você)</label>
+        <p class="muted" style="margin:0">Coloque o nome e a idade de cada pessoa. O valor aparece na hora.</p>
+        <div id="pessoas"></div>
+        <button type="button" class="add" id="add">+ Adicionar pessoa</button>
+
+        <div class="total" id="total" aria-live="polite"></div>
+        <p class="aviso-pag">💬 Não precisa pagar agora. Depois que fecharmos a lista, a gente manda o PIX pelo WhatsApp.</p>
+      </div>
+
+      <label for="recado">Recado (opcional)</label>
+      <textarea id="recado" maxlength="300" placeholder="Alguma restrição alimentar, dúvida ou mensagem pra gente?"></textarea>
+
+      <button type="submit" class="enviar" id="enviar">Confirmar presença</button>
+      <div class="erro" id="erro" role="alert"></div>
+    </form>
+  </section>
+
+  <section class="card sucesso oculto" id="sucesso">
+    <div class="grande-emoji" id="suc-emoji">🎄</div>
+    <h2 id="suc-titulo">Presença confirmada!</h2>
+    <p id="suc-texto"></p>
+    <div class="resumo-final" id="suc-resumo"></div>
+    <p class="muted" id="suc-extra"></p>
+  </section>
+
+  <footer>Com carinho, Matheus e Madu ❤️</footer>
+</div>
+
+<script>
+/* ======= CONFIGURAÇÃO ======= */
+const URL_PLANILHA = "https://script.google.com/macros/s/AKfycbxMnz19tZdho6lgWcMInAv2Gy5qxuRGNsdQUgkNkw6pWEekafy89iMKAoESQBuxv7Uo/exec";
+const VALOR_ADULTO = 60;
+const FAIXAS = [
+  { nome: "Bebê",        de: 0,  ate: 4,   pct: 0,    texto: "0 a 4 anos" },
+  { nome: "Criança",     de: 5,  ate: 11,  pct: 0.5,  texto: "5 a 11 anos · paga meia" },
+  { nome: "Adolescente", de: 12, ate: 17,  pct: 0.75, texto: "12 a 17 anos · paga 75%" },
+  { nome: "Adulto",      de: 18, ate: 130, pct: 1,    texto: "18 anos ou mais" },
+];
+/* ============================ */
+
+const brl = v => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+const $ = id => document.getElementById(id);
+const faixaDe = idade => FAIXAS.find(f => idade >= f.de && idade <= f.ate);
+const valorDe = f => Math.round(VALOR_ADULTO * f.pct * 100) / 100;
+let vai = null;
+
+// neve
+(() => { const n = $("neve"); for (let i = 0; i < 28; i++) { const s = document.createElement("i");
+  s.style.left = Math.random() * 100 + "%"; const t = 8 + Math.random() * 10;
+  s.style.animationDuration = t + "s"; s.style.animationDelay = (-Math.random() * t) + "s";
+  const z = 3 + Math.random() * 4; s.style.width = s.style.height = z + "px"; n.appendChild(s); } })();
+
+// cartões de faixa
+(() => { const box = $("faixas");
+  FAIXAS.forEach(f => { const d = document.createElement("div"); d.className = "faixa" + (f.pct === 1 ? " adulto" : "");
+    const v = valorDe(f);
+    d.innerHTML = `<div class="nome"></div><div class="idade"></div><div class="valor"></div>`;
+    d.querySelector(".nome").textContent = f.nome;
+    d.querySelector(".idade").textContent = f.texto;
+    d.querySelector(".valor").textContent = v === 0 ? "Não paga" : brl(v);
+    box.appendChild(d); }); })();
+
+// contador de confirmados
+(async () => { if (!URL_PLANILHA.startsWith("https://")) return;
+  try { const r = await fetch(URL_PLANILHA); const j = await r.json();
+    if (j.ok && j.pessoas > 0) $("contador").textContent = `✨ ${j.pessoas} ${j.pessoas === 1 ? "pessoa já confirmou" : "pessoas já confirmaram"}`;
+  } catch (e) {} })();
+
+// pessoas
+function novaPessoa(nome = "") {
+  const row = document.createElement("div"); row.className = "pessoa";
+  row.innerHTML = `
+    <div><label>Nome</label><input class="p-nome" maxlength="80" placeholder="Nome"></div>
+    <div><label>Idade</label><input class="p-idade" type="number" inputmode="numeric" min="0" max="120" placeholder="anos"></div>
+    <button type="button" class="remover" aria-label="Remover pessoa">✕</button>
+    <div class="info"></div>`;
+  row.querySelector(".p-nome").value = nome;
+  row.querySelector(".remover").onclick = () => { if ($("pessoas").children.length > 1) { row.remove(); calcular(); } else { row.querySelector(".p-nome").value = ""; row.querySelector(".p-idade").value = ""; calcular(); } };
+  row.querySelectorAll("input").forEach(i => i.addEventListener("input", calcular));
+  $("pessoas").appendChild(row); calcular(); return row;
+}
+function lerPessoas() {
+  return [...document.querySelectorAll(".pessoa")].map(r => {
+    const nome = r.querySelector(".p-nome").value.trim();
+    const bruto = r.querySelector(".p-idade").value.trim();
+    const idade = bruto === "" ? null : Number(bruto);
+    return { r, nome, idade };
+  });
+}
+function calcular() {
+  const ps = lerPessoas(); let total = 0; const cont = {};
+  ps.forEach(p => { const info = p.r.querySelector(".info"); info.className = "info";
+    if (p.idade === null || !Number.isInteger(p.idade) || p.idade < 0 || p.idade > 120) { info.textContent = p.idade === null ? "" : "Idade inválida"; return; }
+    const f = faixaDe(p.idade); const v = valorDe(f); total += v;
+    cont[f.nome] = (cont[f.nome] || 0) + 1;
+    info.classList.add("ok"); info.textContent = `${f.nome} · ${v === 0 ? "não paga" : brl(v)}`; });
+  const validas = Object.values(cont).reduce((a, b) => a + b, 0);
+  const linhas = FAIXAS.filter(f => cont[f.nome]).map(f =>
+    `<div class="linha"><span>${cont[f.nome]} ${f.nome.toLowerCase()}${cont[f.nome] > 1 ? (f.nome === "Bebê" ? "s" : "s") : ""} × ${valorDe(f) === 0 ? "grátis" : brl(valorDe(f))}</span><span>${brl(cont[f.nome] * valorDe(f))}</span></div>`).join("");
+  $("total").innerHTML = (linhas || `<div class="linha"><span>Preencha a idade de cada pessoa</span></div>`) +
+    `<div class="grande"><span>${validas} ${validas === 1 ? "pessoa" : "pessoas"}<br><small style="opacity:.85">Total da família</small></span><b>${brl(total)}</b></div>`;
+  return total;
+}
+
+function escolher(sim) {
+  vai = sim; $("btn-sim").setAttribute("aria-pressed", sim); $("btn-nao").setAttribute("aria-pressed", !sim);
+  $("form").classList.remove("oculto"); $("bloco-pessoas").classList.toggle("oculto", !sim);
+  $("enviar").textContent = sim ? "Confirmar presença" : "Avisar que não vou";
+  $("enviar").classList.toggle("nao", !sim);
+  $("recado").placeholder = sim ? "Alguma restrição alimentar, dúvida ou mensagem pra gente?" : "Quer deixar uma mensagem pra gente?";
+  if (sim && !$("pessoas").children.length) novaPessoa();
+  $("erro").textContent = "";
+  $("responsavel").focus({ preventScroll: true });
+}
+$("btn-sim").onclick = () => escolher(true);
+$("btn-nao").onclick = () => escolher(false);
+$("add").onclick = () => novaPessoa().querySelector(".p-nome").focus();
+$("responsavel").addEventListener("input", () => {
+  const primeira = document.querySelector(".pessoa .p-nome");
+  if (primeira && (primeira.dataset.auto === "1" || primeira.value === "")) { primeira.value = $("responsavel").value; primeira.dataset.auto = "1"; }
+});
+document.addEventListener("input", e => { if (e.target.classList && e.target.classList.contains("p-nome")) e.target.dataset.auto = "0"; });
+
+$("form").addEventListener("submit", async ev => {
+  ev.preventDefault(); const erro = $("erro"); erro.textContent = "";
+  const responsavel = $("responsavel").value.trim(); const whatsapp = $("whatsapp").value.trim();
+  if (responsavel.length < 2) { erro.textContent = "Coloque seu nome."; $("responsavel").focus(); return; }
+  if (whatsapp.replace(/\D/g, "").length < 10) { erro.textContent = "Coloque seu WhatsApp com DDD."; $("whatsapp").focus(); return; }
+  let pessoas = [];
+  if (vai) {
+    const ps = lerPessoas().filter(p => p.nome || p.idade !== null);
+    if (!ps.length) { erro.textContent = "Adicione pelo menos uma pessoa."; return; }
+    for (const p of ps) {
+      if (!p.nome) { erro.textContent = "Falta o nome de uma das pessoas."; p.r.querySelector(".p-nome").focus(); return; }
+      if (p.idade === null || !Number.isInteger(p.idade) || p.idade < 0 || p.idade > 120) { erro.textContent = `Falta a idade de ${p.nome}.`; p.r.querySelector(".p-idade").focus(); return; }
+    }
+    pessoas = ps.map(p => ({ nome: p.nome, idade: p.idade }));
+  }
+  const dados = { vai, responsavel, whatsapp, pessoas, recado: $("recado").value.trim() };
+  const btn = $("enviar"); btn.disabled = true; const txt = btn.textContent; btn.textContent = "Enviando...";
+  try {
+    const r = await fetch(URL_PLANILHA, { method: "POST", body: JSON.stringify(dados) });
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.erro || "erro");
+    mostrarSucesso(dados);
+  } catch (e) {
+    erro.textContent = "Não consegui enviar agora. Confira sua internet e tente de novo. Se continuar, avise o Matheus pelo WhatsApp.";
+    btn.disabled = false; btn.textContent = txt;
+  }
+});
+
+function mostrarSucesso(d) {
+  $("form-card").classList.add("oculto"); const s = $("sucesso"); s.classList.remove("oculto");
+  const resumo = $("suc-resumo"); resumo.innerHTML = "";
+  if (d.vai) {
+    $("suc-emoji").textContent = "🎄"; $("suc-titulo").textContent = "Presença confirmada!";
+    $("suc-texto").textContent = `Obrigado, ${d.responsavel.split(" ")[0]}! Vai ser muito bom ter vocês aqui.`;
+    let total = 0;
+    d.pessoas.forEach(p => { const f = faixaDe(p.idade); const v = valorDe(f); total += v;
+      const linha = document.createElement("div"); const a = document.createElement("span"); const b = document.createElement("span");
+      a.textContent = `${p.nome} (${f.nome.toLowerCase()})`; b.textContent = v === 0 ? "não paga" : brl(v);
+      linha.append(a, b); resumo.appendChild(linha); });
+    const t = document.createElement("div"); t.style.cssText = "border-top:1px solid #ead9c6;margin-top:6px;padding-top:8px;font-weight:800";
+    t.innerHTML = `<span>Total da família</span><span>${brl(total)}</span>`; resumo.appendChild(t);
+    $("suc-extra").textContent = "Depois que fecharmos a lista, mandamos pelo WhatsApp o PIX e o endereço. Se precisar mudar alguma coisa, é só falar com a gente.";
+  } else {
+    $("suc-emoji").textContent = "💛"; $("suc-titulo").textContent = "Que pena!";
+    $("suc-texto").textContent = `Obrigado por avisar, ${d.responsavel.split(" ")[0]}. Vamos sentir sua falta. Feliz Natal!`;
+    resumo.classList.add("oculto"); $("suc-extra").textContent = "Se der certo de vir, é só abrir este link de novo e confirmar.";
+  }
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+calcular();
+</script>
+</body>
+</html>
