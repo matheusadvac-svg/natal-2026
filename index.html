@@ -25,7 +25,7 @@
   html,body{margin:0}
   body{
     font-family:"Nunito Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-    color:var(--tinta); font-size:17px; line-height:1.5;
+    color:var(--tinta); font-size:18px; line-height:1.5;
     background:
       radial-gradient(1200px 600px at 50% -200px,#a3202f 0%,transparent 70%),
       linear-gradient(180deg,var(--vinho) 0%,var(--vinho-esc) 100%);
@@ -99,6 +99,19 @@
   .enviar:disabled{opacity:.6;cursor:wait}
   .enviar.nao{background:linear-gradient(180deg,#9c1d2c,var(--vinho));box-shadow:0 6px 16px rgba(122,20,32,.35)}
   .erro{color:var(--erro);font-weight:700;font-size:15px;margin-top:10px;min-height:1px}
+  .passo{font-weight:800;font-size:20px;margin:24px 0 10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .passo small{font-weight:600;color:var(--suave);font-size:15px}
+  .num{background:var(--vinho);color:#fff;width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:17px;flex:none}
+  .cont{display:grid;grid-template-columns:minmax(0,1fr) 52px 34px 52px;align-items:center;gap:6px;padding:12px 10px;border:2px solid var(--linha);border-radius:14px;background:#fff;margin-bottom:8px}
+  .cont.tem{border-color:var(--verde);background:var(--verde-claro)}
+  .cont .t{font-weight:800;font-size:17px;white-space:nowrap}
+  .cont .s{font-size:13px;color:var(--suave)}
+  .cont .n{text-align:center;font-family:Fraunces,Georgia,serif;font-weight:700;font-size:30px}
+  .cont button{height:52px;border-radius:14px;border:0;font-size:32px;font-weight:800;line-height:1;color:#fff;background:var(--verde)}
+  .cont button.menos{background:#b9a9a0}
+  .cont button:active{transform:scale(.94)}
+  #form input{font-size:20px;padding:16px}
+  .enviar{font-size:21px!important;padding:22px!important;margin-top:26px!important}
   .oculto{display:none!important}
 
   .sucesso{text-align:center}
@@ -134,45 +147,24 @@
     </div>
   </section>
 
-  <section class="card">
-    <h2>Quanto fica por pessoa</h2>
-    <p class="muted">Tudo é dividido entre quem vem, e o valor depende da idade:</p>
-    <div class="faixas" id="faixas"></div>
-    <div class="prazo">
-      <div>📅</div>
-      <div>Confirme <b>até 30 de novembro</b>. Precisamos fechar o número de pessoas para encomendar a ceia a tempo.</div>
-    </div>
-  </section>
-
   <section class="card" id="form-card">
-    <h2>Você vem?</h2>
-    <div class="escolha">
-      <button type="button" class="opcao" id="btn-sim" aria-pressed="false"><span>🎉</span>Sim, vou!</button>
-      <button type="button" class="opcao nao" id="btn-nao" aria-pressed="false"><span>😢</span>Não vou conseguir</button>
-    </div>
+    <h2>Confirme aqui 👇</h2>
+    <div class="prazo"><div>📅</div><div>Só <b>até 30 de novembro</b>. Quem não confirmar <b>fica fora da lista</b>.</div></div>
 
-    <form id="form" class="oculto" novalidate>
-      <label for="responsavel">Seu nome</label>
-      <input id="responsavel" autocomplete="name" maxlength="80" placeholder="Ex.: Maria Silva">
+    <div class="passo"><span class="num">1</span> Quantas pessoas vêm? <small>(conte você também)</small></div>
+    <div id="contadores"></div>
+    <div class="total" id="total" aria-live="polite"></div>
 
-      <label for="whatsapp">Seu WhatsApp</label>
+    <form id="form" novalidate>
+      <div class="passo"><span class="num">2</span> Seu nome</div>
+      <input id="responsavel" autocomplete="name" maxlength="80" placeholder="Escreva seu nome">
+
+      <div class="passo"><span class="num">3</span> Seu WhatsApp</div>
       <input id="whatsapp" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="(68) 9 9999-9999">
 
-      <div id="bloco-pessoas">
-        <label style="margin-top:20px">Quem vem (inclua você)</label>
-        <p class="muted" style="margin:0">Coloque o nome e a idade de cada pessoa. O valor aparece na hora.</p>
-        <div id="pessoas"></div>
-        <button type="button" class="add" id="add">+ Adicionar pessoa</button>
-
-        <div class="total" id="total" aria-live="polite"></div>
-        <p class="aviso-pag">💬 Não precisa pagar agora. Depois que fecharmos a lista, a gente manda o PIX pelo WhatsApp.</p>
-      </div>
-
-      <label for="recado">Recado (opcional)</label>
-      <textarea id="recado" maxlength="300" placeholder="Alguma restrição alimentar, dúvida ou mensagem pra gente?"></textarea>
-
-      <button type="submit" class="enviar" id="enviar">Confirmar presença</button>
+      <button type="submit" class="enviar" id="enviar">✅ CONFIRMAR PRESENÇA</button>
       <div class="erro" id="erro" role="alert"></div>
+      <p class="aviso-pag">Não precisa pagar agora. O PIX a gente manda depois pelo WhatsApp.</p>
     </form>
   </section>
 
@@ -211,124 +203,67 @@ let vai = null;
   s.style.animationDuration = t + "s"; s.style.animationDelay = (-Math.random() * t) + "s";
   const z = 3 + Math.random() * 4; s.style.width = s.style.height = z + "px"; n.appendChild(s); } })();
 
-// cartões de faixa
-(() => { const box = $("faixas");
-  FAIXAS.forEach(f => { const d = document.createElement("div"); d.className = "faixa" + (f.pct === 1 ? " adulto" : "");
-    const v = valorDe(f);
-    d.innerHTML = `<div class="nome"></div><div class="idade"></div><div class="valor"></div>`;
-    d.querySelector(".nome").textContent = f.nome;
-    d.querySelector(".idade").textContent = f.texto;
-    d.querySelector(".valor").textContent = v === 0 ? "Não paga" : brl(v);
-    box.appendChild(d); }); })();
-
 // contador de confirmados
-(async () => { if (!URL_PLANILHA.startsWith("https://")) return;
-  try { const r = await fetch(URL_PLANILHA); const j = await r.json();
+(async () => { try { const j = await (await fetch(URL_PLANILHA)).json();
     if (j.ok && j.pessoas > 0) $("contador").textContent = `✨ ${j.pessoas} ${j.pessoas === 1 ? "pessoa já confirmou" : "pessoas já confirmaram"}`;
   } catch (e) {} })();
 
-// pessoas
-function novaPessoa(nome = "") {
-  const row = document.createElement("div"); row.className = "pessoa";
-  row.innerHTML = `
-    <div><label>Nome</label><input class="p-nome" maxlength="80" placeholder="Nome"></div>
-    <div><label>Idade</label><input class="p-idade" type="number" inputmode="numeric" min="0" max="120" placeholder="anos"></div>
-    <button type="button" class="remover" aria-label="Remover pessoa">✕</button>
-    <div class="info"></div>`;
-  row.querySelector(".p-nome").value = nome;
-  row.querySelector(".remover").onclick = () => { if ($("pessoas").children.length > 1) { row.remove(); calcular(); } else { row.querySelector(".p-nome").value = ""; row.querySelector(".p-idade").value = ""; calcular(); } };
-  row.querySelectorAll("input").forEach(i => i.addEventListener("input", calcular));
-  $("pessoas").appendChild(row); calcular(); return row;
-}
-function lerPessoas() {
-  return [...document.querySelectorAll(".pessoa")].map(r => {
-    const nome = r.querySelector(".p-nome").value.trim();
-    const bruto = r.querySelector(".p-idade").value.trim();
-    const idade = bruto === "" ? null : Number(bruto);
-    return { r, nome, idade };
-  });
-}
-function calcular() {
-  const ps = lerPessoas(); let total = 0; const cont = {};
-  ps.forEach(p => { const info = p.r.querySelector(".info"); info.className = "info";
-    if (p.idade === null || !Number.isInteger(p.idade) || p.idade < 0 || p.idade > 120) { info.textContent = p.idade === null ? "" : "Idade inválida"; return; }
-    const f = faixaDe(p.idade); const v = valorDe(f); total += v;
-    cont[f.nome] = (cont[f.nome] || 0) + 1;
-    info.classList.add("ok"); info.textContent = `${f.nome} · ${v === 0 ? "não paga" : brl(v)}`; });
-  const validas = Object.values(cont).reduce((a, b) => a + b, 0);
-  const linhas = FAIXAS.filter(f => cont[f.nome]).map(f =>
-    `<div class="linha"><span>${cont[f.nome]} ${f.nome.toLowerCase()}${cont[f.nome] > 1 ? (f.nome === "Bebê" ? "s" : "s") : ""} × ${valorDe(f) === 0 ? "grátis" : brl(valorDe(f))}</span><span>${brl(cont[f.nome] * valorDe(f))}</span></div>`).join("");
-  $("total").innerHTML = (linhas || `<div class="linha"><span>Preencha a idade de cada pessoa</span></div>`) +
-    `<div class="grande"><span>${validas} ${validas === 1 ? "pessoa" : "pessoas"}<br><small style="opacity:.85">Total da família</small></span><b>${brl(total)}</b></div>`;
-  return total;
-}
-
-function escolher(sim) {
-  vai = sim; $("btn-sim").setAttribute("aria-pressed", sim); $("btn-nao").setAttribute("aria-pressed", !sim);
-  $("form").classList.remove("oculto"); $("bloco-pessoas").classList.toggle("oculto", !sim);
-  $("enviar").textContent = sim ? "Confirmar presença" : "Avisar que não vou";
-  $("enviar").classList.toggle("nao", !sim);
-  $("recado").placeholder = sim ? "Alguma restrição alimentar, dúvida ou mensagem pra gente?" : "Quer deixar uma mensagem pra gente?";
-  if (sim && !$("pessoas").children.length) novaPessoa();
-  $("erro").textContent = "";
-  $("responsavel").focus({ preventScroll: true });
-}
-$("btn-sim").onclick = () => escolher(true);
-$("btn-nao").onclick = () => escolher(false);
-$("add").onclick = () => novaPessoa().querySelector(".p-nome").focus();
-$("responsavel").addEventListener("input", () => {
-  const primeira = document.querySelector(".pessoa .p-nome");
-  if (primeira && (primeira.dataset.auto === "1" || primeira.value === "")) { primeira.value = $("responsavel").value; primeira.dataset.auto = "1"; }
+// contadores por faixa (idade enviada à planilha é só representativa da faixa)
+const GRUPOS = [
+  { f: FAIXAS[3], plural: "Adultos",      emoji: "🧑", idade: 30, qtd: 1 },
+  { f: FAIXAS[2], plural: "Adolescentes", emoji: "🧒", idade: 14, qtd: 0 },
+  { f: FAIXAS[1], plural: "Crianças",     emoji: "👧", idade: 8,  qtd: 0 },
+  { f: FAIXAS[0], plural: "Bebês",        emoji: "👶", idade: 2,  qtd: 0 },
+];
+GRUPOS.forEach(g => {
+  const v = valorDe(g.f); const row = document.createElement("div"); row.className = "cont";
+  row.innerHTML = `<div class="quem"><div class="t"></div><div class="s"></div></div>
+    <button type="button" class="menos" aria-label="Diminuir">−</button><div class="n">0</div><button type="button" class="mais" aria-label="Aumentar">+</button>`;
+  row.querySelector(".t").textContent = `${g.emoji} ${g.plural}`;
+  row.querySelector(".s").textContent = `${g.f.texto.split(" ·")[0]} · ${v === 0 ? "não paga" : brl(v) + " cada"}`;
+  g.n = row.querySelector(".n"); g.row = row;
+  row.querySelector(".menos").onclick = () => { if (g.qtd > 0) g.qtd--; calcular(); };
+  row.querySelector(".mais").onclick = () => { if (g.qtd < 20) g.qtd++; calcular(); };
+  $("contadores").appendChild(row);
 });
-document.addEventListener("input", e => { if (e.target.classList && e.target.classList.contains("p-nome")) e.target.dataset.auto = "0"; });
+function calcular() {
+  let total = 0, pessoas = 0;
+  GRUPOS.forEach(g => { g.n.textContent = g.qtd; g.row.classList.toggle("tem", g.qtd > 0); total += g.qtd * valorDe(g.f); pessoas += g.qtd; });
+  $("total").innerHTML = `<div class="grande"><span>${pessoas} ${pessoas === 1 ? "pessoa" : "pessoas"}<br><small style="opacity:.85">Total a pagar</small></span><b>${brl(total)}</b></div>`;
+  return { total, pessoas };
+}
 
 $("form").addEventListener("submit", async ev => {
   ev.preventDefault(); const erro = $("erro"); erro.textContent = "";
   const responsavel = $("responsavel").value.trim(); const whatsapp = $("whatsapp").value.trim();
-  if (responsavel.length < 2) { erro.textContent = "Coloque seu nome."; $("responsavel").focus(); return; }
-  if (whatsapp.replace(/\D/g, "").length < 10) { erro.textContent = "Coloque seu WhatsApp com DDD."; $("whatsapp").focus(); return; }
-  let pessoas = [];
-  if (vai) {
-    const ps = lerPessoas().filter(p => p.nome || p.idade !== null);
-    if (!ps.length) { erro.textContent = "Adicione pelo menos uma pessoa."; return; }
-    for (const p of ps) {
-      if (!p.nome) { erro.textContent = "Falta o nome de uma das pessoas."; p.r.querySelector(".p-nome").focus(); return; }
-      if (p.idade === null || !Number.isInteger(p.idade) || p.idade < 0 || p.idade > 120) { erro.textContent = `Falta a idade de ${p.nome}.`; p.r.querySelector(".p-idade").focus(); return; }
-    }
-    pessoas = ps.map(p => ({ nome: p.nome, idade: p.idade }));
-  }
-  const dados = { vai, responsavel, whatsapp, pessoas, recado: $("recado").value.trim() };
+  if (calcular().pessoas === 0) { erro.textContent = "Toque no + para dizer quantas pessoas vêm."; $("contadores").scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+  if (responsavel.length < 2) { erro.textContent = "Escreva seu nome."; $("responsavel").focus(); return; }
+  if (whatsapp.replace(/\D/g, "").length < 10) { erro.textContent = "Escreva seu WhatsApp com DDD."; $("whatsapp").focus(); return; }
+  const pessoas = [];
+  GRUPOS.forEach(g => { for (let i = 1; i <= g.qtd; i++) pessoas.push({ nome: `${g.f.nome} ${i} (${responsavel})`, idade: g.idade }); });
+  const dados = { vai: true, responsavel, whatsapp, pessoas, recado: "" };
   const btn = $("enviar"); btn.disabled = true; const txt = btn.textContent; btn.textContent = "Enviando...";
   try {
-    const r = await fetch(URL_PLANILHA, { method: "POST", body: JSON.stringify(dados) });
-    const j = await r.json();
+    const j = await (await fetch(URL_PLANILHA, { method: "POST", body: JSON.stringify(dados) })).json();
     if (!j.ok) throw new Error(j.erro || "erro");
-    mostrarSucesso(dados);
+    mostrarSucesso(responsavel);
   } catch (e) {
-    erro.textContent = "Não consegui enviar agora. Confira sua internet e tente de novo. Se continuar, avise o Matheus pelo WhatsApp.";
+    erro.textContent = "Não consegui enviar. Confira sua internet e tente de novo, ou avise o Matheus pelo WhatsApp.";
     btn.disabled = false; btn.textContent = txt;
   }
 });
 
-function mostrarSucesso(d) {
-  $("form-card").classList.add("oculto"); const s = $("sucesso"); s.classList.remove("oculto");
-  const resumo = $("suc-resumo"); resumo.innerHTML = "";
-  if (d.vai) {
-    $("suc-emoji").textContent = "🎄"; $("suc-titulo").textContent = "Presença confirmada!";
-    $("suc-texto").textContent = `Obrigado, ${d.responsavel.split(" ")[0]}! Vai ser muito bom ter vocês aqui.`;
-    let total = 0;
-    d.pessoas.forEach(p => { const f = faixaDe(p.idade); const v = valorDe(f); total += v;
-      const linha = document.createElement("div"); const a = document.createElement("span"); const b = document.createElement("span");
-      a.textContent = `${p.nome} (${f.nome.toLowerCase()})`; b.textContent = v === 0 ? "não paga" : brl(v);
-      linha.append(a, b); resumo.appendChild(linha); });
-    const t = document.createElement("div"); t.style.cssText = "border-top:1px solid #ead9c6;margin-top:6px;padding-top:8px;font-weight:800";
-    t.innerHTML = `<span>Total da família</span><span>${brl(total)}</span>`; resumo.appendChild(t);
-    $("suc-extra").textContent = "Depois que fecharmos a lista, mandamos pelo WhatsApp o PIX e o endereço. E não esquece: bebida alcoólica cada um traz a sua, na própria geleira. 🍺 Se precisar mudar alguma coisa, é só falar com a gente.";
-  } else {
-    $("suc-emoji").textContent = "💛"; $("suc-titulo").textContent = "Que pena!";
-    $("suc-texto").textContent = `Obrigado por avisar, ${d.responsavel.split(" ")[0]}. Vamos sentir sua falta. Feliz Natal!`;
-    resumo.classList.add("oculto"); $("suc-extra").textContent = "Se der certo de vir, é só abrir este link de novo e confirmar.";
-  }
+function mostrarSucesso(responsavel) {
+  $("form-card").classList.add("oculto"); $("sucesso").classList.remove("oculto");
+  $("suc-titulo").textContent = "Presença confirmada!";
+  $("suc-texto").textContent = `Obrigado, ${responsavel.split(" ")[0]}! Esperamos vocês no dia 24. 🎄`;
+  const resumo = $("suc-resumo"); resumo.innerHTML = ""; let total = 0;
+  GRUPOS.filter(g => g.qtd > 0).forEach(g => { const v = g.qtd * valorDe(g.f); total += v;
+    const l = document.createElement("div"); const a = document.createElement("span"); const b = document.createElement("span");
+    a.textContent = `${g.qtd} × ${g.plural.toLowerCase()}`; b.textContent = v === 0 ? "não paga" : brl(v); l.append(a, b); resumo.appendChild(l); });
+  const t = document.createElement("div"); t.style.cssText = "border-top:1px solid #ead9c6;margin-top:6px;padding-top:8px;font-weight:800";
+  const ta = document.createElement("span"); const tb = document.createElement("span"); ta.textContent = "Total a pagar"; tb.textContent = brl(total); t.append(ta, tb); resumo.appendChild(t);
+  $("suc-extra").textContent = "O PIX e o endereço a gente manda pelo WhatsApp. Lembrete: bebida alcoólica, cada um traz a sua. 🍺 Errou alguma coisa? Fale com o Matheus.";
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 calcular();
