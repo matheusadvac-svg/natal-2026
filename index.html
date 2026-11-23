@@ -116,6 +116,9 @@
   .nomes input{font-size:18px;padding:13px 14px;border-color:var(--verde)}
   .cont{margin-bottom:6px}
   .enviar{font-size:21px!important;padding:22px!important;margin-top:26px!important}
+  .fam{display:flex;flex-wrap:wrap;gap:6px;padding:10px 0;border-bottom:1px dashed var(--linha)}
+  .fam:last-child{border-bottom:0}
+  .chip{background:var(--verde-claro);color:var(--verde);font-weight:700;border-radius:999px;padding:5px 12px;font-size:16px}
   .oculto{display:none!important}
 
   .sucesso{text-align:center}
@@ -177,6 +180,11 @@
     <p class="muted" id="suc-extra"></p>
   </section>
 
+  <section class="card oculto" id="lista-card">
+    <h2 id="lista-titulo">Quem já confirmou</h2>
+    <div id="lista"></div>
+  </section>
+
   <footer>Com carinho, Matheus e Madu ❤️</footer>
 </div>
 
@@ -204,10 +212,19 @@ let vai = null;
   s.style.animationDuration = t + "s"; s.style.animationDelay = (-Math.random() * t) + "s";
   const z = 3 + Math.random() * 4; s.style.width = s.style.height = z + "px"; n.appendChild(s); } })();
 
-// contador de confirmados
-(async () => { try { const j = await (await fetch(URL_PLANILHA)).json();
-    if (j.ok && j.pessoas > 0) $("contador").textContent = `✨ ${j.pessoas} ${j.pessoas === 1 ? "pessoa já confirmou" : "pessoas já confirmaram"}`;
-  } catch (e) {} })();
+// lista de quem já confirmou
+async function carregarLista() {
+  try { const j = await (await fetch(URL_PLANILHA)).json();
+    if (!j.ok || !j.pessoas) return;
+    const txt = `${j.pessoas} ${j.pessoas === 1 ? "pessoa já confirmou" : "pessoas já confirmaram"}`;
+    $("contador").textContent = "✨ " + txt; $("lista-titulo").textContent = "🎉 " + txt;
+    const box = $("lista"); box.innerHTML = "";
+    (j.familias || []).forEach(f => { const d = document.createElement("div"); d.className = "fam";
+      f.nomes.forEach(n => { const c = document.createElement("span"); c.className = "chip"; c.textContent = n.nome; d.appendChild(c); });
+      box.appendChild(d); });
+    $("lista-card").classList.remove("oculto");
+  } catch (e) {} }
+carregarLista();
 
 // contadores por faixa (idade enviada à planilha é só representativa da faixa)
 const GRUPOS = [
@@ -252,11 +269,11 @@ $("form").addEventListener("submit", async ev => {
   if (whatsapp.replace(/\D/g, "").length < 10) { erro.textContent = "Escreva seu WhatsApp com DDD."; $("whatsapp").focus(); return; }
   const responsavel = pessoas[0].nome;
   const dados = { vai: true, responsavel, whatsapp, pessoas: pessoas.map(p => ({ nome: p.nome, idade: p.idade })), recado: "" };
-  const btn = $("enviar"); btn.disabled = true; const txt = btn.textContent; btn.textContent = "Enviando...";
+  const btn = $("enviar"); btn.disabled = true; const txt = btn.textContent; btn.textContent = "⏳ Enviando, aguarde...";
   try {
     const j = await (await fetch(URL_PLANILHA, { method: "POST", body: JSON.stringify(dados) })).json();
     if (!j.ok) throw new Error(j.erro || "erro");
-    mostrarSucesso(pessoas);
+    mostrarSucesso(pessoas); carregarLista();
   } catch (e) {
     erro.textContent = "Não consegui enviar. Confira sua internet e tente de novo, ou avise o Matheus pelo WhatsApp.";
     btn.disabled = false; btn.textContent = txt;
