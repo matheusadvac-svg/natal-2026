@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Natal 2026 · Confirme sua presença</title>
-<meta name="description" content="Ceia de Natal na casa do Matheus e da Madu, 24/12 a partir das 21h. Confirme quem vem e veja o valor por pessoa.">
+<meta name="description" content="Ceia de Natal na casa do Matheus e da Madu, 24/12 a partir das 21h. Veja o que está incluso, o valor por pessoa e confirme quem vem.">
 <meta property="og:title" content="Natal 2026 · Confirme sua presença">
-<meta property="og:description" content="Ceia de Natal, 24/12 a partir das 21h. Confirme até 03/12 e veja o valor por pessoa.">
+<meta property="og:description" content="Ceia de Natal, 24/12 a partir das 21h. Confirme até 30/11 e veja o que está incluso e o valor por pessoa.">
 <meta property="og:image" content="https://matheusadvac-svg.github.io/natal-2026/og.png">
 <meta property="og:url" content="https://matheusadvac-svg.github.io/natal-2026/">
 <meta name="twitter:card" content="summary_large_image">
@@ -59,6 +59,12 @@
   .faixa .valor small{font-family:"Nunito Sans",sans-serif;font-size:13px;font-weight:700;color:var(--suave)}
   .faixa.adulto{border-color:var(--ouro);background:var(--ouro-claro)}
 
+  .inclui{list-style:none;padding:0;margin:12px 0 0}
+  .inclui li{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-bottom:1px dashed var(--linha)}
+  .inclui li:last-child{border-bottom:0}
+  .inclui li span{font-size:22px;line-height:1.2;width:28px;text-align:center;flex:none}
+  .traga{display:flex;gap:12px;align-items:flex-start;background:#fdf1dc;border:1.5px solid var(--ouro);border-radius:14px;padding:12px 14px;margin-top:10px}
+  .traga b{color:var(--vinho)}
   .prazo{display:flex;gap:12px;align-items:flex-start;background:var(--verde-claro);border-radius:14px;padding:12px 14px;margin-top:12px}
   .prazo b{color:var(--verde)}
 
@@ -114,13 +120,27 @@
   </header>
 
   <section class="card">
-    <h2>Como funciona a divisão</h2>
-    <p>A ceia, as bebidas e a decoração são divididas entre todo mundo. A casa é por nossa conta. 😊</p>
-    <p class="muted">O valor é por pessoa e depende da idade:</p>
+    <h2>O que está incluso</h2>
+    <ul class="inclui">
+      <li><span>🍽️</span><div><b>Ceia completa</b> do O Segredo Buffet: carnes natalinas, arroz, farofa, salada tropical e sobremesas</div></li>
+      <li><span>🥤</span><div><b>Refrigerante, suco, água e gelo</b></div></li>
+      <li><span>🎁</span><div><b>Bingo e brincadeiras com prêmios</b></div></li>
+      <li><span>🎄</span><div><b>Decoração e descartáveis</b></div></li>
+      <li><span>🏠</span><div>A casa é por nossa conta 😊</div></li>
+    </ul>
+    <div class="traga">
+      <div>🍺</div>
+      <div><b>Bebida alcoólica: cada um traz a sua</b>, na própria geleira.</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Quanto fica por pessoa</h2>
+    <p class="muted">Tudo é dividido entre quem vem, e o valor depende da idade:</p>
     <div class="faixas" id="faixas"></div>
     <div class="prazo">
       <div>📅</div>
-      <div>Confirme <b>até 3 de dezembro</b>. Precisamos fechar o número de pessoas para encomendar a ceia a tempo.</div>
+      <div>Confirme <b>até 30 de novembro</b>. Precisamos fechar o número de pessoas para encomendar a ceia a tempo.</div>
     </div>
   </section>
 
@@ -170,7 +190,7 @@
 <script>
 /* ======= CONFIGURAÇÃO ======= */
 const URL_PLANILHA = "https://script.google.com/macros/s/AKfycbxMnz19tZdho6lgWcMInAv2Gy5qxuRGNsdQUgkNkw6pWEekafy89iMKAoESQBuxv7Uo/exec";
-const VALOR_ADULTO = 60;
+const VALOR_ADULTO = 100;
 const FAIXAS = [
   { nome: "Bebê",        de: 0,  ate: 4,   pct: 0,    texto: "0 a 4 anos" },
   { nome: "Criança",     de: 5,  ate: 11,  pct: 0.5,  texto: "5 a 11 anos · paga meia" },
@@ -303,7 +323,7 @@ function mostrarSucesso(d) {
       linha.append(a, b); resumo.appendChild(linha); });
     const t = document.createElement("div"); t.style.cssText = "border-top:1px solid #ead9c6;margin-top:6px;padding-top:8px;font-weight:800";
     t.innerHTML = `<span>Total da família</span><span>${brl(total)}</span>`; resumo.appendChild(t);
-    $("suc-extra").textContent = "Depois que fecharmos a lista, mandamos pelo WhatsApp o PIX e o endereço. Se precisar mudar alguma coisa, é só falar com a gente.";
+    $("suc-extra").textContent = "Depois que fecharmos a lista, mandamos pelo WhatsApp o PIX e o endereço. E não esquece: bebida alcoólica cada um traz a sua, na própria geleira. 🍺 Se precisar mudar alguma coisa, é só falar com a gente.";
   } else {
     $("suc-emoji").textContent = "💛"; $("suc-titulo").textContent = "Que pena!";
     $("suc-texto").textContent = `Obrigado por avisar, ${d.responsavel.split(" ")[0]}. Vamos sentir sua falta. Feliz Natal!`;
