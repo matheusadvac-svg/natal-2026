@@ -111,6 +111,10 @@
   .cont button.menos{background:#b9a9a0}
   .cont button:active{transform:scale(.94)}
   #form input{font-size:20px;padding:16px}
+  .nomes{margin:-2px 0 8px 14px;display:grid;gap:6px}
+  .nomes:empty{display:none}
+  .nomes input{font-size:18px;padding:13px 14px;border-color:var(--verde)}
+  .cont{margin-bottom:6px}
   .enviar{font-size:21px!important;padding:22px!important;margin-top:26px!important}
   .oculto{display:none!important}
 
@@ -151,15 +155,12 @@
     <h2>Confirme aqui 👇</h2>
     <div class="prazo"><div>📅</div><div>Só <b>até 30 de novembro</b>. Quem não confirmar <b>fica fora da lista</b>.</div></div>
 
-    <div class="passo"><span class="num">1</span> Quantas pessoas vêm? <small>(conte você também)</small></div>
+    <div class="passo"><span class="num">1</span> Quem vem? <small>(toque no + e escreva o nome de cada um, você também)</small></div>
     <div id="contadores"></div>
     <div class="total" id="total" aria-live="polite"></div>
 
     <form id="form" novalidate>
-      <div class="passo"><span class="num">2</span> Seu nome</div>
-      <input id="responsavel" autocomplete="name" maxlength="80" placeholder="Escreva seu nome">
-
-      <div class="passo"><span class="num">3</span> Seu WhatsApp</div>
+      <div class="passo"><span class="num">2</span> Seu WhatsApp</div>
       <input id="whatsapp" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="(68) 9 9999-9999">
 
       <button type="submit" class="enviar" id="enviar">✅ CONFIRMAR PRESENÇA</button>
@@ -210,10 +211,10 @@ let vai = null;
 
 // contadores por faixa (idade enviada à planilha é só representativa da faixa)
 const GRUPOS = [
-  { f: FAIXAS[3], plural: "Adultos",      emoji: "🧑", idade: 30, qtd: 1 },
-  { f: FAIXAS[2], plural: "Adolescentes", emoji: "🧒", idade: 14, qtd: 0 },
-  { f: FAIXAS[1], plural: "Crianças",     emoji: "👧", idade: 8,  qtd: 0 },
-  { f: FAIXAS[0], plural: "Bebês",        emoji: "👶", idade: 2,  qtd: 0 },
+  { f: FAIXAS[3], plural: "Adultos",      emoji: "🧑", idade: 30, qtd: 1, de: "do adulto" },
+  { f: FAIXAS[2], plural: "Adolescentes", emoji: "🧒", idade: 14, qtd: 0, de: "do adolescente" },
+  { f: FAIXAS[1], plural: "Crianças",     emoji: "👧", idade: 8,  qtd: 0, de: "da criança" },
+  { f: FAIXAS[0], plural: "Bebês",        emoji: "👶", idade: 2,  qtd: 0, de: "do bebê" },
 ];
 GRUPOS.forEach(g => {
   const v = valorDe(g.f); const row = document.createElement("div"); row.className = "cont";
@@ -224,43 +225,52 @@ GRUPOS.forEach(g => {
   g.n = row.querySelector(".n"); g.row = row;
   row.querySelector(".menos").onclick = () => { if (g.qtd > 0) g.qtd--; calcular(); };
   row.querySelector(".mais").onclick = () => { if (g.qtd < 20) g.qtd++; calcular(); };
-  $("contadores").appendChild(row);
+  g.nomes = document.createElement("div"); g.nomes.className = "nomes";
+  $("contadores").append(row, g.nomes);
 });
 function calcular() {
   let total = 0, pessoas = 0;
-  GRUPOS.forEach(g => { g.n.textContent = g.qtd; g.row.classList.toggle("tem", g.qtd > 0); total += g.qtd * valorDe(g.f); pessoas += g.qtd; });
+  GRUPOS.forEach(g => {
+    while (g.nomes.children.length > g.qtd) g.nomes.lastChild.remove();
+    while (g.nomes.children.length < g.qtd) { const i = document.createElement("input"); i.maxLength = 60; i.autocomplete = "off";
+      i.placeholder = `Nome ${g.de} ${g.nomes.children.length + 1}`; g.nomes.appendChild(i); }
+    g.n.textContent = g.qtd; g.row.classList.toggle("tem", g.qtd > 0); total += g.qtd * valorDe(g.f); pessoas += g.qtd; });
   $("total").innerHTML = `<div class="grande"><span>${pessoas} ${pessoas === 1 ? "pessoa" : "pessoas"}<br><small style="opacity:.85">Total a pagar</small></span><b>${brl(total)}</b></div>`;
   return { total, pessoas };
 }
 
 $("form").addEventListener("submit", async ev => {
   ev.preventDefault(); const erro = $("erro"); erro.textContent = "";
-  const responsavel = $("responsavel").value.trim(); const whatsapp = $("whatsapp").value.trim();
-  if (calcular().pessoas === 0) { erro.textContent = "Toque no + para dizer quantas pessoas vêm."; $("contadores").scrollIntoView({ behavior: "smooth", block: "center" }); return; }
-  if (responsavel.length < 2) { erro.textContent = "Escreva seu nome."; $("responsavel").focus(); return; }
-  if (whatsapp.replace(/\D/g, "").length < 10) { erro.textContent = "Escreva seu WhatsApp com DDD."; $("whatsapp").focus(); return; }
+  const whatsapp = $("whatsapp").value.trim();
+  if (calcular().pessoas === 0) { erro.textContent = "Toque no + para dizer quem vem."; $("contadores").scrollIntoView({ behavior: "smooth", block: "center" }); return; }
   const pessoas = [];
-  GRUPOS.forEach(g => { for (let i = 1; i <= g.qtd; i++) pessoas.push({ nome: `${g.f.nome} ${i} (${responsavel})`, idade: g.idade }); });
-  const dados = { vai: true, responsavel, whatsapp, pessoas, recado: "" };
+  for (const g of GRUPOS) for (const i of g.nomes.children) {
+    const nome = i.value.trim();
+    if (nome.length < 2) { erro.textContent = "Falta escrever o nome de uma pessoa."; i.focus(); i.scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+    pessoas.push({ nome, idade: g.idade, g });
+  }
+  if (whatsapp.replace(/\D/g, "").length < 10) { erro.textContent = "Escreva seu WhatsApp com DDD."; $("whatsapp").focus(); return; }
+  const responsavel = pessoas[0].nome;
+  const dados = { vai: true, responsavel, whatsapp, pessoas: pessoas.map(p => ({ nome: p.nome, idade: p.idade })), recado: "" };
   const btn = $("enviar"); btn.disabled = true; const txt = btn.textContent; btn.textContent = "Enviando...";
   try {
     const j = await (await fetch(URL_PLANILHA, { method: "POST", body: JSON.stringify(dados) })).json();
     if (!j.ok) throw new Error(j.erro || "erro");
-    mostrarSucesso(responsavel);
+    mostrarSucesso(pessoas);
   } catch (e) {
     erro.textContent = "Não consegui enviar. Confira sua internet e tente de novo, ou avise o Matheus pelo WhatsApp.";
     btn.disabled = false; btn.textContent = txt;
   }
 });
 
-function mostrarSucesso(responsavel) {
+function mostrarSucesso(pessoas) {
   $("form-card").classList.add("oculto"); $("sucesso").classList.remove("oculto");
   $("suc-titulo").textContent = "Presença confirmada!";
-  $("suc-texto").textContent = `Obrigado, ${responsavel.split(" ")[0]}! Esperamos vocês no dia 24. 🎄`;
+  $("suc-texto").textContent = `Obrigado, ${pessoas[0].nome.split(" ")[0]}! Esperamos vocês no dia 24. 🎄`;
   const resumo = $("suc-resumo"); resumo.innerHTML = ""; let total = 0;
-  GRUPOS.filter(g => g.qtd > 0).forEach(g => { const v = g.qtd * valorDe(g.f); total += v;
+  pessoas.forEach(p => { const v = valorDe(p.g.f); total += v;
     const l = document.createElement("div"); const a = document.createElement("span"); const b = document.createElement("span");
-    a.textContent = `${g.qtd} × ${g.plural.toLowerCase()}`; b.textContent = v === 0 ? "não paga" : brl(v); l.append(a, b); resumo.appendChild(l); });
+    a.textContent = `${p.nome} (${p.g.f.nome.toLowerCase()})`; b.textContent = v === 0 ? "não paga" : brl(v); l.append(a, b); resumo.appendChild(l); });
   const t = document.createElement("div"); t.style.cssText = "border-top:1px solid #ead9c6;margin-top:6px;padding-top:8px;font-weight:800";
   const ta = document.createElement("span"); const tb = document.createElement("span"); ta.textContent = "Total a pagar"; tb.textContent = brl(total); t.append(ta, tb); resumo.appendChild(t);
   $("suc-extra").textContent = "O PIX e o endereço a gente manda pelo WhatsApp. Lembrete: bebida alcoólica, cada um traz a sua. 🍺 Errou alguma coisa? Fale com o Matheus.";
