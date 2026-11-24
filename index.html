@@ -127,6 +127,24 @@
   .caixa small{display:block;font-size:13.5px;opacity:.8}
   .caixa b{font-family:var(--display);font-weight:800;font-size:clamp(17px,5.2vw,22px);color:var(--ouro);white-space:nowrap;font-variant-numeric:tabular-nums}
   .chip.pago{background:#1f6f54;border-color:#7be0a8}
+  .aviso{background:var(--ouro);color:var(--tinta);font-weight:700;border-radius:18px;padding:14px 16px;white-space:pre-line}
+  .prato{border:1px solid rgba(246,196,83,.4);background:rgba(60,5,12,.35);border-radius:20px;overflow:hidden;margin-bottom:12px}
+  .prato img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+  .prato-txt{padding:14px 16px}
+  .prato-txt b{font-family:var(--display);font-size:22px}
+  .prato-txt p{margin:4px 0 0;opacity:.85;font-size:17px}
+  .prog{list-style:none;margin:0;padding:0}
+  .prog li{display:grid;grid-template-columns:76px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,245,225,.14);font-weight:600}
+  .prog li:last-child{border-bottom:0}
+  .prog b{font-family:var(--display);font-weight:800;color:var(--ouro);font-size:21px}
+  .pix{border:1.5px solid var(--ouro);border-radius:20px;padding:18px;text-align:center;background:rgba(60,5,12,.35)}
+  .pix small{display:block;opacity:.8;font-size:15px}
+  .pix b{display:block;font-family:var(--display);font-size:24px;color:var(--ouro);word-break:break-all;user-select:all;margin:2px 0}
+  .pix span{display:block;font-weight:600}
+  .pix button{margin-top:14px;width:100%;border:0;border-radius:14px;padding:16px;font-weight:800;font-size:19px;background:var(--ouro);color:var(--tinta)}
+  .pix p{margin:12px 0 0;font-size:16px;opacity:.85;white-space:pre-line}
+  .pix p:empty{display:none}
+  .engrenagem{display:inline-block;margin-top:14px;color:inherit;font-size:14px;opacity:.75;padding:8px 12px}
   footer{text-align:center;font-size:15px;opacity:.7;margin-top:44px}
 
   @media (prefers-reduced-motion:reduce){
@@ -142,9 +160,9 @@
 <div class="wrap">
   <svg class="pisca" id="pisca" aria-hidden="true"></svg>
   <header>
-    <h1><span><i>Natal</i></span><span><i>em casa</i></span></h1>
+    <h1><span><i id="c-t1">Natal</i></span><span><i id="c-t2">em casa</i></span></h1>
     <div class="apos">
-      <p class="onde"><b>24 de dezembro</b>, a partir das <b>21h</b><br>na casa do Matheus e da Madu</p>
+      <p class="onde"><b id="c-quando"></b><br><span id="c-onde"></span></p>
       <p class="faltam" id="faltam">Faltam</p>
       <div class="relogio" id="relogio" aria-live="off">
         <div><b id="r-d">0</b><small>dias</small></div>
@@ -155,30 +173,40 @@
     </div>
   </header>
 
+  <div class="aviso oculto" id="aviso"></div>
+
   <section class="bloco">
     <h2>O que está incluso</h2>
-    <ul class="inclui">
-      <li><span>🍽️</span><div>Ceia completa<small>Carnes natalinas, arroz, farofa, salada e sobremesas do O Segredo Buffet</small></div></li>
-      <li><span>🥤</span><div>Refrigerante, suco, água e gelo</div></li>
-      <li><span>🎁</span><div>Bingo e brincadeiras com prêmios</div></li>
-      <li><span>🎄</span><div>Decoração e descartáveis</div></li>
-    </ul>
-    <div class="traga"><div>🍺</div><div><b>Bebida alcoólica:</b> cada um traz a sua, na própria geleira.</div></div>
+    <ul class="inclui" id="incluso"></ul>
+    <div class="traga oculto" id="traga-box"><div>🍺</div><div id="traga"></div></div>
+  </section>
+
+  <section class="bloco oculto" id="cardapio-card">
+    <h2>Cardápio</h2>
+    <div id="cardapio"></div>
+  </section>
+
+  <section class="bloco oculto" id="prog-card">
+    <h2>Programação da noite</h2>
+    <ul class="prog" id="prog"></ul>
   </section>
 
   <section class="convite" id="form-card">
     <h2>Confirme sua presença</h2>
-    <div class="prazo">Só <b>até 30 de novembro</b>. Quem não confirmar <b>fica fora da lista</b>.</div>
+    <div class="prazo" id="c-prazo"></div>
     <hr class="corte">
-    <p class="pergunta">Quem vem?</p>
-    <p class="ajuda">Toque no <b>+</b> e escreva o nome de cada pessoa. Conte você também.</p>
-    <div id="contadores"></div>
-    <div class="total" aria-live="polite"><span><b id="t-pessoas">0 pessoas</b>Total a pagar</span><strong id="t-valor">R$ 0,00</strong></div>
-    <form id="form" novalidate>
-      <button type="submit" class="enviar" id="enviar">Confirmar presença</button>
-      <div class="erro" id="erro" role="alert"></div>
-      <p class="depois">Não precisa pagar agora. O PIX a gente manda depois no grupo.</p>
-    </form>
+    <div id="aberto">
+      <p class="pergunta">Quem vem?</p>
+      <p class="ajuda">Toque no <b>+</b> e escreva o nome de cada pessoa. Conte você também.</p>
+      <div id="contadores"></div>
+      <div class="total" aria-live="polite"><span><b id="t-pessoas">0 pessoas</b>Total a pagar</span><strong id="t-valor">R$ 0,00</strong></div>
+      <form id="form" novalidate>
+        <button type="submit" class="enviar" id="enviar">Confirmar presença</button>
+        <div class="erro" id="erro" role="alert"></div>
+        <p class="depois">Não precisa pagar agora. O PIX a gente manda depois no grupo.</p>
+      </form>
+    </div>
+    <p class="pergunta oculto" id="fechado">As confirmações estão encerradas. Para entrar na lista, fale com o Matheus.</p>
   </section>
 
   <section class="convite ok oculto" id="sucesso">
@@ -189,11 +217,22 @@
     <p class="depois" id="suc-extra"></p>
   </section>
 
+  <section class="bloco oculto" id="pix-card">
+    <h2>Como pagar</h2>
+    <div class="pix">
+      <small>Chave PIX</small>
+      <b id="pix-chave"></b>
+      <span id="pix-nome"></span>
+      <button type="button" id="pix-copiar">Copiar chave</button>
+      <p id="pix-obs"></p>
+    </div>
+  </section>
+
   <section class="bloco oculto" id="lista-card">
     <h2 id="lista-titulo">Quem já confirmou</h2>
     <div class="barra" role="img" id="barra-rotulo"><i id="barra"></i></div>
     <p class="meta" id="meta"></p>
-    <div class="caixa">
+    <div class="caixa oculto" id="caixa">
       <div><small>Soma</small><b id="cx-total">R$ 0</b></div>
       <div><small>Já pago</small><b id="cx-pago">R$ 0</b></div>
       <div><small>Falta pagar</small><b id="cx-falta">R$ 0</b></div>
@@ -201,26 +240,30 @@
     <div id="lista"></div>
   </section>
 
-  <footer>Com carinho, Matheus e Madu ❤️</footer>
+  <footer><span id="c-rodape"></span><br><a href="admin.html" class="engrenagem" aria-label="Configuração">⚙ Configuração</a></footer>
 </div>
 
 <script>
-/* ======= CONFIGURAÇÃO ======= */
-const URL_PLANILHA = "https://script.google.com/macros/s/AKfycbxMnz19tZdho6lgWcMInAv2Gy5qxuRGNsdQUgkNkw6pWEekafy89iMKAoESQBuxv7Uo/exec";
-const VALOR_ADULTO = 100;
-const META_PESSOAS = 40;
-const DATA_CEIA = new Date("2026-12-24T21:00:00-05:00");
-const FAIXAS = [
-  { nome: "Bebê",        pct: 0,    texto: "0 a 4 anos" },
-  { nome: "Criança",     pct: 0.5,  texto: "5 a 11 anos" },
-  { nome: "Adolescente", pct: 0.75, texto: "12 a 17 anos" },
-  { nome: "Adulto",      pct: 1,    texto: "18 anos ou mais" },
-];
-/* ============================ */
+const API = "https://api-production-d0b4a0a1.up.railway.app";
+// Valores iniciais, usados até o servidor responder. Tudo isto se edita no painel de configuração.
+let CFG = {
+  titulo1: "Natal", titulo2: "em casa", data: "2026-12-24T21:00:00-05:00",
+  quando: "24 de dezembro, a partir das 21h", onde: "na casa do Matheus e da Madu",
+  prazo: "Só até 30 de novembro. Quem não confirmar fica fora da lista.", aberto: true, meta: 40,
+  precos: { adulto: 100, adolescente: 75, crianca: 50, bebe: 0 },
+  incluso: [
+    { icone: "🍽️", titulo: "Ceia completa", detalhe: "Carnes natalinas, arroz, farofa, salada e sobremesas do O Segredo Buffet" },
+    { icone: "🥤", titulo: "Refrigerante, suco, água e gelo", detalhe: "" },
+    { icone: "🎁", titulo: "Bingo e brincadeiras com prêmios", detalhe: "" },
+    { icone: "🎄", titulo: "Decoração e descartáveis", detalhe: "" },
+  ],
+  traga: "Bebida alcoólica: cada um traz a sua, na própria geleira.", aviso: "",
+  pix: { mostrar: false }, programacao: [], cardapio: [], rodape: "Com carinho, Matheus e Madu ❤️",
+};
 
 const brl = v => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 const $ = id => document.getElementById(id);
-const valorDe = f => Math.round(VALOR_ADULTO * f.pct * 100) / 100;
+const el = (tag, cls, texto) => { const e = document.createElement(tag); if (cls) e.className = cls; if (texto != null) e.textContent = texto; return e; };
 const calmo = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // pisca-pisca
@@ -248,48 +291,28 @@ const calmo = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // contagem regressiva
 (() => { const ant = {}; const poe = (id, v) => { if (ant[id] === v) return; ant[id] = v; const e = $(id); e.textContent = v; e.classList.remove("vira"); void e.offsetWidth; e.classList.add("vira"); };
-  const tique = () => { let s = Math.floor((DATA_CEIA - Date.now()) / 1000);
-    if (s <= 0) { $("faltam").textContent = "É hoje! 🎄"; $("relogio").classList.add("oculto"); return; }
+  const tique = () => { let s = Math.floor((new Date(CFG.data) - Date.now()) / 1000);
+    const hoje = s <= 0; $("relogio").classList.toggle("oculto", hoje); $("faltam").textContent = hoje ? "É hoje! 🎄" : "Faltam"; if (hoje) return;
     poe("r-d", Math.floor(s / 86400)); poe("r-h", Math.floor(s % 86400 / 3600)); poe("r-m", Math.floor(s % 3600 / 60)); poe("r-s", s % 60); };
   tique(); setInterval(tique, 1000); })();
 
-// lista de quem já confirmou
-async function carregarLista() {
-  try { const j = await (await fetch(URL_PLANILHA)).json();
-    if (!j.ok || !j.pessoas) return;
-    $("lista-titulo").textContent = `${j.pessoas} ${j.pessoas === 1 ? "pessoa já confirmou" : "pessoas já confirmaram"}`;
-    const falta = Math.max(0, META_PESSOAS - j.pessoas);
-    $("meta").textContent = falta ? `Esperamos ${META_PESSOAS} pessoas. Faltam ${falta}.` : `Chegamos às ${META_PESSOAS} pessoas! 🎉`;
-    $("barra-rotulo").setAttribute("aria-label", `${j.pessoas} de ${META_PESSOAS} pessoas`);
-    setTimeout(() => { $("barra").style.width = Math.min(100, j.pessoas / META_PESSOAS * 100) + "%"; }, 150);
-    const total = Number(j.total) || 0, pago = Number(j.pago) || 0;
-    const r0 = v => "R$ " + Math.round(v).toLocaleString("pt-BR");
-    $("cx-total").textContent = r0(total); $("cx-pago").textContent = r0(pago); $("cx-falta").textContent = r0(Math.max(0, total - pago));
-    const box = $("lista"); box.innerHTML = ""; let k = 0;
-    (j.familias || []).forEach(f => { const d = document.createElement("div"); d.className = "fam";
-      f.nomes.forEach(n => { const c = document.createElement("span"); c.className = "chip" + (n.pago ? " pago" : ""); c.textContent = (n.pago ? "✓ " : "") + n.nome; if (n.pago) c.title = "Já pagou"; c.style.animationDelay = (k++ * 60) + "ms"; d.appendChild(c); });
-      box.appendChild(d); });
-    $("lista-card").classList.remove("oculto");
-  } catch (e) {} }
-carregarLista();
-
-// contadores por faixa (a idade enviada à planilha só marca a faixa)
+// contadores por faixa
 const GRUPOS = [
-  { f: FAIXAS[3], plural: "Adultos",      emoji: "🧑", idade: 30, qtd: 1, de: "do adulto" },
-  { f: FAIXAS[2], plural: "Adolescentes", emoji: "🧒", idade: 14, qtd: 0, de: "do adolescente" },
-  { f: FAIXAS[1], plural: "Crianças",     emoji: "👧", idade: 8,  qtd: 0, de: "da criança" },
-  { f: FAIXAS[0], plural: "Bebês",        emoji: "👶", idade: 2,  qtd: 0, de: "do bebê" },
+  { id: "adulto",      nome: "adulto",      plural: "Adultos",      emoji: "🧑", idade: "18 anos ou mais", qtd: 1, de: "do adulto" },
+  { id: "adolescente", nome: "adolescente", plural: "Adolescentes", emoji: "🧒", idade: "12 a 17 anos",    qtd: 0, de: "do adolescente" },
+  { id: "crianca",     nome: "criança",     plural: "Crianças",     emoji: "👧", idade: "5 a 11 anos",     qtd: 0, de: "da criança" },
+  { id: "bebe",        nome: "bebê",        plural: "Bebês",        emoji: "👶", idade: "0 a 4 anos",      qtd: 0, de: "do bebê" },
 ];
+const valorDe = g => Number(CFG.precos[g.id]) || 0;
 GRUPOS.forEach(g => {
-  const v = valorDe(g.f); const row = document.createElement("div"); row.className = "cont";
+  const row = el("div", "cont");
   row.innerHTML = `<div><div class="t"></div><div class="s"></div></div>
     <button type="button" class="menos" aria-label="Diminuir">−</button><div class="n">0</div><button type="button" class="mais" aria-label="Aumentar">+</button>`;
   row.querySelector(".t").textContent = `${g.emoji} ${g.plural}`;
-  row.querySelector(".s").textContent = `${g.f.texto} · ${v === 0 ? "não paga" : brl(v)}`;
-  g.n = row.querySelector(".n"); g.row = row;
+  g.s = row.querySelector(".s"); g.n = row.querySelector(".n"); g.row = row;
   row.querySelector(".menos").onclick = () => { if (g.qtd > 0) { g.qtd--; calcular(g); } };
-  row.querySelector(".mais").onclick = () => { if (g.qtd < 20) { g.qtd++; calcular(g); const novo = g.nomes.lastChild; if (novo) novo.focus({ preventScroll: false }); } };
-  g.nomes = document.createElement("div"); g.nomes.className = "nomes";
+  row.querySelector(".mais").onclick = () => { if (g.qtd < 20) { g.qtd++; calcular(g); const novo = g.nomes.lastChild; if (novo) novo.focus(); } };
+  g.nomes = el("div", "nomes");
   $("contadores").append(row, g.nomes);
 });
 let valorNaTela = 0, anim;
@@ -301,14 +324,62 @@ function calcular(mudou) {
   let total = 0, pessoas = 0;
   GRUPOS.forEach(g => {
     while (g.nomes.children.length > g.qtd) g.nomes.lastChild.remove();
-    while (g.nomes.children.length < g.qtd) { const i = document.createElement("input"); i.maxLength = 60; i.autocomplete = "off"; i.enterKeyHint = "done";
+    while (g.nomes.children.length < g.qtd) { const i = el("input"); i.maxLength = 60; i.autocomplete = "off"; i.enterKeyHint = "done";
       i.placeholder = `Nome ${g.de} ${g.nomes.children.length + 1}`; g.nomes.appendChild(i); }
-    g.n.textContent = g.qtd; g.row.classList.toggle("tem", g.qtd > 0); total += g.qtd * valorDe(g.f); pessoas += g.qtd; });
+    const v = valorDe(g); g.s.textContent = `${g.idade} · ${v === 0 ? "não paga" : brl(v)}`;
+    g.n.textContent = g.qtd; g.row.classList.toggle("tem", g.qtd > 0); total += g.qtd * v; pessoas += g.qtd; });
   if (mudou) { mudou.n.classList.remove("pop"); void mudou.n.offsetWidth; mudou.n.classList.add("pop"); }
   $("t-pessoas").textContent = `${pessoas} ${pessoas === 1 ? "pessoa" : "pessoas"}`; rolaValor(total);
   $("erro").textContent = "";
   return { total, pessoas };
 }
+
+// aplica na página o que está configurado no painel
+function aplicar() {
+  const c = CFG;
+  $("c-t1").textContent = c.titulo1; $("c-t2").textContent = c.titulo2;
+  $("c-quando").textContent = c.quando; $("c-onde").textContent = c.onde; $("c-prazo").textContent = c.prazo; $("c-prazo").classList.toggle("oculto", !c.prazo);
+  $("c-rodape").textContent = c.rodape;
+  $("aviso").textContent = c.aviso ? "📣 " + c.aviso : ""; $("aviso").classList.toggle("oculto", !c.aviso);
+  const inc = $("incluso"); inc.innerHTML = "";
+  (c.incluso || []).forEach(i => { const li = el("li"); li.append(el("span", "", i.icone || "✔️")); const d = el("div", "", i.titulo); if (i.detalhe) d.append(el("small", "", i.detalhe)); li.append(d); inc.append(li); });
+  $("traga").textContent = c.traga; $("traga-box").classList.toggle("oculto", !c.traga);
+  const car = $("cardapio"); car.innerHTML = "";
+  (c.cardapio || []).forEach(p => { const d = el("div", "prato"); if (p.foto) { const im = el("img"); im.src = `${API}/fotos/${p.foto}`; im.alt = p.nome; im.loading = "lazy"; d.append(im); }
+    const t = el("div", "prato-txt"); t.append(el("b", "", p.nome)); if (p.descricao) t.append(el("p", "", p.descricao)); d.append(t); car.append(d); });
+  $("cardapio-card").classList.toggle("oculto", !(c.cardapio || []).length);
+  const pr = $("prog"); pr.innerHTML = "";
+  (c.programacao || []).forEach(i => { const li = el("li"); li.append(el("b", "", i.hora), el("span", "", i.texto)); pr.append(li); });
+  $("prog-card").classList.toggle("oculto", !(c.programacao || []).length);
+  const px = c.pix || {}; $("pix-card").classList.toggle("oculto", !(px.mostrar && px.chave));
+  $("pix-chave").textContent = px.chave || ""; $("pix-nome").textContent = px.nome || ""; $("pix-obs").textContent = px.obs || "";
+  $("aberto").classList.toggle("oculto", !c.aberto); $("fechado").classList.toggle("oculto", !!c.aberto);
+  calcular();
+}
+$("pix-copiar").onclick = async () => { const b = $("pix-copiar");
+  try { await navigator.clipboard.writeText(CFG.pix.chave); b.textContent = "Chave copiada ✓"; } catch (e) { b.textContent = "Segure o dedo na chave para copiar"; }
+  setTimeout(() => (b.textContent = "Copiar chave"), 2500); };
+
+// busca no servidor a configuração e quem já confirmou
+async function carregar() {
+  try { const j = await (await fetch(API + "/api/publico")).json();
+    if (!j.ok) return; CFG = j.config; aplicar();
+    if (!j.pessoas) { $("lista-card").classList.add("oculto"); return; }
+    $("lista-titulo").textContent = `${j.pessoas} ${j.pessoas === 1 ? "pessoa já confirmou" : "pessoas já confirmaram"}`;
+    const meta = CFG.meta || 40, falta = Math.max(0, meta - j.pessoas);
+    $("meta").textContent = falta ? `Esperamos ${meta} pessoas. Faltam ${falta}.` : `Chegamos às ${meta} pessoas! 🎉`;
+    $("barra-rotulo").setAttribute("aria-label", `${j.pessoas} de ${meta} pessoas`);
+    setTimeout(() => { $("barra").style.width = Math.min(100, j.pessoas / meta * 100) + "%"; }, 150);
+    const temValores = typeof j.total === "number"; $("caixa").classList.toggle("oculto", !temValores);
+    if (temValores) { const r0 = v => "R$ " + Math.round(v).toLocaleString("pt-BR");
+      $("cx-total").textContent = r0(j.total); $("cx-pago").textContent = r0(j.pago); $("cx-falta").textContent = r0(Math.max(0, j.total - j.pago)); }
+    const box = $("lista"); box.innerHTML = ""; let k = 0;
+    (j.familias || []).forEach(f => { const d = el("div", "fam");
+      f.nomes.forEach(n => { const c = el("span", "chip" + (n.pago ? " pago" : ""), (n.pago ? "✓ " : "") + n.nome); if (n.pago) c.title = "Já pagou"; c.style.animationDelay = (k++ * 60) + "ms"; d.appendChild(c); });
+      box.appendChild(d); });
+    $("lista-card").classList.remove("oculto");
+  } catch (e) {} }
+aplicar(); carregar();
 
 $("form").addEventListener("submit", async ev => {
   ev.preventDefault(); const erro = $("erro");
@@ -317,14 +388,14 @@ $("form").addEventListener("submit", async ev => {
   for (const g of GRUPOS) for (const i of g.nomes.children) {
     const nome = i.value.trim();
     if (nome.length < 2) { erro.textContent = "Falta escrever o nome de uma pessoa."; i.focus(); i.scrollIntoView({ behavior: "smooth", block: "center" }); return; }
-    pessoas.push({ nome, idade: g.idade, g });
+    pessoas.push({ nome, faixa: g.id, g });
   }
-  const dados = { vai: true, responsavel: pessoas[0].nome, whatsapp: "", pessoas: pessoas.map(p => ({ nome: p.nome, idade: p.idade })), recado: "" };
   const btn = $("enviar"); btn.disabled = true; const txt = btn.textContent; btn.textContent = "Enviando, aguarde…";
   try {
-    const j = await (await fetch(URL_PLANILHA, { method: "POST", body: JSON.stringify(dados) })).json();
-    if (!j.ok) throw new Error(j.erro || "erro");
-    mostrarSucesso(pessoas); carregarLista();
+    const r = await fetch(API + "/api/confirmar", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ pessoas: pessoas.map(p => ({ nome: p.nome, faixa: p.faixa })) }) });
+    const j = await r.json();
+    if (!j.ok) { erro.textContent = j.erro || "Não foi possível enviar."; btn.disabled = false; btn.textContent = txt; return; }
+    mostrarSucesso(pessoas); carregar();
   } catch (e) {
     erro.textContent = "Não foi possível enviar. Confira sua internet e toque em confirmar de novo.";
     btn.disabled = false; btn.textContent = txt;
@@ -333,12 +404,12 @@ $("form").addEventListener("submit", async ev => {
 
 function mostrarSucesso(pessoas) {
   $("form-card").classList.add("oculto"); $("sucesso").classList.remove("oculto");
-  $("suc-texto").textContent = `Obrigado, ${pessoas[0].nome.split(" ")[0]}! Esperamos vocês no dia 24.`;
+  $("suc-texto").textContent = `Obrigado, ${pessoas[0].nome.split(" ")[0]}! Esperamos vocês.`;
   const resumo = $("suc-resumo"); resumo.innerHTML = ""; let total = 0;
-  const linha = (a, b, cls) => { const l = document.createElement("div"); if (cls) l.className = cls; const x = document.createElement("span"), y = document.createElement("span"); x.textContent = a; y.textContent = b; l.append(x, y); resumo.appendChild(l); };
-  pessoas.forEach(p => { const v = valorDe(p.g.f); total += v; linha(`${p.nome} (${p.g.f.nome.toLowerCase()})`, v === 0 ? "não paga" : brl(v)); });
+  const linha = (a, b, cls) => { const l = el("div", cls); l.append(el("span", "", a), el("span", "", b)); resumo.appendChild(l); };
+  pessoas.forEach(p => { const v = valorDe(p.g); total += v; linha(`${p.nome} (${p.g.nome})`, v === 0 ? "não paga" : brl(v)); });
   linha("Total a pagar", brl(total), "soma");
-  $("suc-extra").textContent = "O PIX e o endereço a gente manda depois. Lembrete: bebida alcoólica, cada um traz a sua. 🍺 Errou alguma coisa? Fale com o Matheus.";
+  $("suc-extra").textContent = "O PIX e o endereço a gente manda depois. Errou alguma coisa? Fale com o Matheus.";
   $("sucesso").scrollIntoView({ behavior: "smooth", block: "center" }); confete();
 }
 
@@ -350,8 +421,6 @@ function confete() { if (calmo) return; const c = $("confete"), x = c.getContext
     for (const p of ps) { p.vy += .32; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.a += p.va;
       x.save(); x.globalAlpha = Math.max(0, 1 - dt / 3200); x.translate(p.x, p.y); x.rotate(p.a); x.fillStyle = p.c; x.fillRect(-p.r / 2, -p.r / 4, p.r, p.r / 2); x.restore(); }
     if (dt < 3200) requestAnimationFrame(quadro); else x.clearRect(0, 0, W, H); })(t0); }
-
-calcular();
 </script>
 </body>
 </html>

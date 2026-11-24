@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Natal 2026 · Configuração</title>
+<meta name="theme-color" content="#3f070e">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--fundo:#3f070e;--vinho:#8a1422;--ouro:#f6c453;--marfim:#fff5e1;--baga:#b3202e;--pinho:#1f6f54;--tinta:#2b0c10;--suave:#6e5a57;--linha:#ead9b8;--display:"Bricolage Grotesque","Figtree",sans-serif}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Figtree",system-ui,sans-serif;font-size:17px;line-height:1.45;color:var(--tinta);background:linear-gradient(180deg,var(--vinho),var(--fundo) 420px) var(--fundo);min-height:100vh}
+  .wrap{max-width:720px;margin:0 auto;padding:20px 14px 60px}
+  h1{font-family:var(--display);color:var(--marfim);font-size:30px;margin:6px 0 2px;letter-spacing:-.02em}
+  h1 small{display:block;font-family:"Figtree";font-size:15px;font-weight:400;opacity:.8;letter-spacing:0}
+  h2{font-family:var(--display);font-size:22px;margin:0 0 12px;color:var(--baga)}
+  a{color:inherit}
+  .topo{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;color:var(--marfim)}
+  .card{background:var(--marfim);border-radius:20px;padding:18px 16px;margin-top:14px}
+  label{display:block;font-weight:700;font-size:14.5px;margin:12px 0 4px}
+  input[type=text],input[type=password],input[type=number],input[type=datetime-local],textarea,select{width:100%;font:inherit;padding:11px 12px;border:1.5px solid var(--linha);border-radius:12px;background:#fff;color:var(--tinta)}
+  textarea{min-height:70px;resize:vertical}
+  input:focus,textarea:focus,select:focus{outline:none;border-color:var(--ouro);box-shadow:0 0 0 3px rgba(246,196,83,.4)}
+  button{font:inherit;cursor:pointer;border:0;border-radius:12px;padding:11px 16px;font-weight:800}
+  .b1{background:var(--baga);color:#fff}.b2{background:var(--tinta);color:var(--marfim)}.b3{background:#eadfc8;color:var(--tinta)}.bv{background:var(--pinho);color:#fff}
+  .largo{width:100%;padding:15px;font-size:18px;margin-top:14px}
+  .abas{display:flex;gap:6px;overflow-x:auto;margin-top:14px;padding-bottom:4px}
+  .abas button{white-space:nowrap;background:rgba(255,245,225,.14);color:var(--marfim);border:1px solid rgba(255,245,225,.25)}
+  .abas button.on{background:var(--ouro);color:var(--tinta);border-color:var(--ouro)}
+  .oculto{display:none!important}
+  .msg{font-weight:700;margin-top:10px;min-height:22px}.msg.ok{color:var(--pinho)}.msg.erro{color:#b42318}
+  .nums{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  .nums div{background:var(--tinta);color:var(--marfim);border-radius:14px;padding:10px 6px;text-align:center}
+  .nums small{display:block;font-size:13px;opacity:.8}.nums b{font-family:var(--display);font-size:20px;color:var(--ouro);white-space:nowrap}
+  .fam{border:1.5px solid var(--linha);border-radius:14px;background:#fff;margin-top:10px;overflow:hidden}
+  .pes{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;padding:10px 12px;border-bottom:1px dashed var(--linha)}
+  .pes:last-child{border-bottom:0}
+  .pes .n{font-weight:800}.pes .d{font-size:14px;color:var(--suave)}
+  .pes .acoes{display:flex;gap:6px;align-items:center}
+  .pago{min-width:104px}.pago.sim{background:var(--pinho);color:#fff}.pago.nao{background:#eadfc8;color:var(--tinta)}
+  .x{background:transparent;color:var(--suave);padding:8px 10px}
+  .linha2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .item{border:1.5px solid var(--linha);border-radius:14px;background:#fff;padding:10px 12px;margin-top:10px;position:relative}
+  .item .x{position:absolute;top:4px;right:4px}
+  .item img{display:block;width:100%;max-height:200px;object-fit:cover;border-radius:10px;margin-top:8px}
+  .chk{display:flex;gap:10px;align-items:center;font-weight:700;margin-top:14px}
+  .chk input{width:22px;height:22px}
+  .dica{font-size:14.5px;color:var(--suave);margin:4px 0 0}
+  @media(max-width:520px){.nums{grid-template-columns:repeat(2,minmax(0,1fr))}.linha2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topo">
+    <h1>Configuração<small>Natal 2026 · só para o Matheus e a Madu</small></h1>
+    <a href="./" style="font-size:15px;white-space:nowrap;margin-top:12px">← Ver a página</a>
+  </div>
+
+  <div class="card" id="tela-senha">
+    <h2 id="senha-titulo">Entrar</h2>
+    <p class="dica" id="senha-dica"></p>
+    <form id="form-senha">
+      <label for="senha">Senha</label>
+      <input type="password" id="senha" autocomplete="current-password">
+      <div id="bloco-repete" class="oculto"><label for="senha2">Repita a senha</label><input type="password" id="senha2" autocomplete="new-password"></div>
+      <button class="b1 largo" id="btn-senha">Entrar</button>
+      <div class="msg erro" id="msg-senha"></div>
+    </form>
+  </div>
+
+  <div id="painel" class="oculto">
+    <div class="abas" id="abas"></div>
+
+    <section class="card" data-aba="Pessoas">
+      <h2>Quem confirmou e pagamentos</h2>
+      <div class="nums"><div><small>Pessoas</small><b id="n-pessoas">0</b></div><div><small>Soma</small><b id="n-total">0</b></div><div><small>Já pago</small><b id="n-pago">0</b></div><div><small>Falta</small><b id="n-falta">0</b></div></div>
+      <p class="dica">Toque em “Falta pagar” quando o PIX cair. Para tirar alguém da lista, toque no ✕ duas vezes.</p>
+      <div id="pessoas"></div>
+      <h2 style="margin-top:22px">Adicionar pessoa</h2>
+      <div class="linha2"><div><label>Nome</label><input type="text" id="np-nome" maxlength="60"></div><div><label>Faixa</label><select id="np-faixa"></select></div></div>
+      <label>Junto com a família de</label><select id="np-junto"></select>
+      <button class="bv largo" id="np-add">Adicionar</button>
+      <div class="msg" id="msg-pessoas"></div>
+    </section>
+
+    <section class="card oculto" data-aba="Página">
+      <h2>Textos e valores da página</h2>
+      <div class="linha2"><div><label>Título, linha 1</label><input type="text" id="c-titulo1" maxlength="30"></div><div><label>Título, linha 2 (em dourado)</label><input type="text" id="c-titulo2" maxlength="30"></div></div>
+      <label>Quando (texto)</label><input type="text" id="c-quando" maxlength="80">
+      <label>Onde (texto)</label><input type="text" id="c-onde" maxlength="80">
+      <p class="dica">A página é pública: evite colocar o endereço completo aqui.</p>
+      <label>Data e hora da ceia (para a contagem regressiva)</label><input type="datetime-local" id="c-data">
+      <label>Aviso do prazo</label><input type="text" id="c-prazo" maxlength="200">
+      <label class="chk"><input type="checkbox" id="c-aberto"> Confirmações abertas</label>
+      <p class="dica">Desmarque depois do prazo: o formulário some e aparece “confirmações encerradas”.</p>
+      <label>Quantas pessoas esperamos (meta da barra)</label><input type="number" id="c-meta" min="1" max="500">
+      <label class="chk"><input type="checkbox" id="c-mostrarValores"> Mostrar na página a soma, o já pago e quem pagou</label>
+      <h2 style="margin-top:22px">Valor por pessoa (R$)</h2>
+      <div class="linha2"><div><label>Adulto (18+)</label><input type="number" id="p-adulto" min="0" step="0.01"></div><div><label>Adolescente (12 a 17)</label><input type="number" id="p-adolescente" min="0" step="0.01"></div>
+        <div><label>Criança (5 a 11)</label><input type="number" id="p-crianca" min="0" step="0.01"></div><div><label>Bebê (0 a 4)</label><input type="number" id="p-bebe" min="0" step="0.01"></div></div>
+      <p class="dica">Mudar o valor vale para quem confirmar daqui pra frente. Quem já confirmou mantém o valor antigo (dá para ajustar na aba Pessoas).</p>
+      <h2 style="margin-top:22px">O que está incluso</h2>
+      <div id="ed-incluso"></div>
+      <label>“Traga a sua” (deixe vazio para esconder)</label><input type="text" id="c-traga" maxlength="200">
+      <label>Aviso em destaque no topo (deixe vazio para esconder)</label><textarea id="c-aviso" maxlength="400"></textarea>
+      <label>Rodapé</label><input type="text" id="c-rodape" maxlength="120">
+      <button class="b1 largo" data-salvar>Salvar página</button><div class="msg"></div>
+    </section>
+
+    <section class="card oculto" data-aba="Pagamento">
+      <h2>Como pagar (PIX)</h2>
+      <label class="chk"><input type="checkbox" id="x-mostrar"> Mostrar o PIX na página</label>
+      <label>Chave PIX</label><input type="text" id="x-chave" maxlength="120">
+      <label>Nome de quem recebe</label><input type="text" id="x-nome" maxlength="80">
+      <label>Observação (prazo, mandar comprovante etc.)</label><textarea id="x-obs" maxlength="200"></textarea>
+      <button class="b1 largo" data-salvar>Salvar pagamento</button><div class="msg"></div>
+    </section>
+
+    <section class="card oculto" data-aba="Programação">
+      <h2>Programação da noite</h2>
+      <p class="dica">Só aparece na página quando tiver pelo menos um item.</p>
+      <div id="ed-programacao"></div>
+      <button class="b1 largo" data-salvar>Salvar programação</button><div class="msg"></div>
+    </section>
+
+    <section class="card oculto" data-aba="Cardápio">
+      <h2>Cardápio</h2>
+      <p class="dica">Coloque os pratos escolhidos, com foto se quiser. Só aparece na página quando tiver pelo menos um prato.</p>
+      <div id="ed-cardapio"></div>
+      <button class="b1 largo" data-salvar>Salvar cardápio</button><div class="msg"></div>
+    </section>
+
+    <section class="card oculto" data-aba="Gastos">
+      <h2>Gastos e saldo</h2>
+      <p class="dica">Esta parte é só sua: não aparece na página.</p>
+      <div class="nums"><div><small>A receber</small><b id="g-receber">0</b></div><div><small>Gastos</small><b id="g-gastos">0</b></div><div><small>Sobra</small><b id="g-sobra">0</b></div><div><small>Já em caixa</small><b id="g-caixa">0</b></div></div>
+      <div id="ed-gastos"></div>
+      <button class="b1 largo" id="salvar-gastos">Salvar gastos</button><div class="msg" id="msg-gastos"></div>
+    </section>
+
+    <section class="card oculto" data-aba="Senha">
+      <h2>Trocar a senha</h2>
+      <label>Nova senha (mínimo de 6 caracteres)</label><input type="password" id="ns1" autocomplete="new-password">
+      <label>Repita a nova senha</label><input type="password" id="ns2" autocomplete="new-password">
+      <button class="b1 largo" id="trocar-senha">Trocar senha</button><div class="msg" id="msg-ns"></div>
+      <button class="b3 largo" id="sair">Sair do painel</button>
+    </section>
+  </div>
+</div>
+
+<script>
+const API = "https://api-production-d0b4a0a1.up.railway.app";
+const $ = id => document.getElementById(id);
+const el = (tag, cls, texto) => { const e = document.createElement(tag); if (cls) e.className = cls; if (texto != null) e.textContent = texto; return e; };
+const brl = v => "R$ " + (Math.round(v * 100) / 100).toLocaleString("pt-BR", { minimumFractionDigits: v % 1 ? 2 : 0 });
+const FAIXAS = { adulto: "Adulto", adolescente: "Adolescente", crianca: "Criança", bebe: "Bebê" };
+const guarda = { get() { try { return localStorage.getItem("natal-token") || ""; } catch (e) { return this.t || ""; } }, set(v) { this.t = v; try { v ? localStorage.setItem("natal-token", v) : localStorage.removeItem("natal-token"); } catch (e) {} } };
+let D = { config: {}, pessoas: [], gastos: [] };
+
+async function api(caminho, metodo = "GET", corpo, binario) {
+  const h = { authorization: "Bearer " + guarda.get() }; if (corpo && !binario) h["content-type"] = "application/json";
+  const r = await fetch(API + caminho, { method: metodo, headers: h, body: binario ? corpo : corpo ? JSON.stringify(corpo) : undefined });
+  const j = await r.json().catch(() => ({ ok: false, erro: "Resposta inesperada do servidor." }));
+  if (r.status === 401 && caminho.startsWith("/api/admin")) { guarda.set(""); mostrarSenha(); }
+  return j;
+}
+const avisa = (e, texto, ok) => { e.textContent = texto; e.className = "msg " + (ok ? "ok" : "erro"); if (ok) setTimeout(() => { if (e.textContent === texto) e.textContent = ""; }, 3500); };
+
+// ---------- senha ----------
+let criando = false;
+async function mostrarSenha() {
+  $("painel").classList.add("oculto"); $("tela-senha").classList.remove("oculto");
+  try { const j = await (await fetch(API + "/api/senha")).json(); criando = !j.criada; } catch (e) { $("msg-senha").textContent = "Sem conexão com o servidor."; }
+  $("senha-titulo").textContent = criando ? "Crie a senha do painel" : "Entrar";
+  $("senha-dica").textContent = criando ? "É o primeiro acesso. Escolha uma senha com pelo menos 6 caracteres; só quem tiver a senha entra aqui." : "";
+  $("bloco-repete").classList.toggle("oculto", !criando); $("btn-senha").textContent = criando ? "Criar senha e entrar" : "Entrar";
+  $("senha").autocomplete = criando ? "new-password" : "current-password";
+}
+$("form-senha").addEventListener("submit", async ev => {
+  ev.preventDefault(); const m = $("msg-senha"); m.textContent = ""; const s = $("senha").value;
+  if (criando && s.length < 6) return (m.textContent = "A senha precisa ter pelo menos 6 caracteres.");
+  if (criando && s !== $("senha2").value) return (m.textContent = "As duas senhas não estão iguais.");
+  const j = await api(criando ? "/api/criar-senha" : "/api/entrar", "POST", { senha: s }).catch(() => ({ erro: "Sem conexão com o servidor." }));
+  if (!j.ok) return (m.textContent = j.erro || "Não foi possível entrar.");
+  guarda.set(j.token); $("senha").value = $("senha2").value = ""; abrir();
+});
+
+// ---------- painel ----------
+const abasNomes = [...document.querySelectorAll("[data-aba]")].map(s => s.dataset.aba);
+abasNomes.forEach((n, i) => { const b = el("button", i ? "" : "on", n); b.type = "button"; b.onclick = () => { document.querySelectorAll("[data-aba]").forEach(s => s.classList.toggle("oculto", s.dataset.aba !== n)); [...$("abas").children].forEach(x => x.classList.toggle("on", x === b)); }; $("abas").append(b); });
+Object.entries(FAIXAS).forEach(([k, v]) => $("np-faixa").append(new Option(v, k)));
+
+async function abrir() {
+  const j = await api("/api/admin").catch(() => null);
+  if (!j || !j.ok) return;
+  D = j; $("tela-senha").classList.add("oculto"); $("painel").classList.remove("oculto");
+  preencher(); pessoas(); gastos();
+}
+
+// editor genérico de listas
+function editor(caixa, itens, campos, rotuloNovo, aoMudar) {
+  caixa.innerHTML = "";
+  itens.forEach((it, i) => { const d = el("div", "item");
+    const x = el("button", "x", "✕"); x.type = "button"; x.title = "Remover"; x.onclick = () => { itens.splice(i, 1); editor(caixa, itens, campos, rotuloNovo, aoMudar); aoMudar && aoMudar(); }; d.append(x);
+    campos.forEach(c => {
+      if (c.tipo === "foto") {
+        const lab = el("label", "", "Foto"); const inp = el("input"); inp.type = "file"; inp.accept = "image/*"; const st = el("p", "dica");
+        const img = el("img"); if (it.foto) img.src = `${API}/fotos/${it.foto}`; else img.classList.add("oculto");
+        inp.onchange = async () => { const f = inp.files[0]; if (!f) return; st.textContent = "Enviando a foto…";
+          try { const blob = await reduz(f); const j = await api("/api/admin/foto", "POST", blob, true);
+            if (!j.ok) return (st.textContent = j.erro || "Não foi possível enviar a foto.");
+            it.foto = j.foto; img.src = `${API}/fotos/${j.foto}`; img.classList.remove("oculto"); st.textContent = "Foto enviada. Toque em salvar para publicar.";
+          } catch (e) { st.textContent = "Não foi possível ler essa foto."; } };
+        d.append(lab, inp, st, img); return; }
+      if (c.tipo === "check") { const l = el("label", "chk"); const i2 = el("input"); i2.type = "checkbox"; i2.checked = !!it[c.k]; i2.onchange = () => { it[c.k] = i2.checked; aoMudar && aoMudar(); }; l.append(i2, document.createTextNode(" " + c.r)); d.append(l); return; }
+      d.append(el("label", "", c.r)); const i2 = el(c.tipo === "longo" ? "textarea" : "input"); if (c.tipo === "numero") { i2.type = "number"; i2.min = 0; i2.step = "0.01"; } else if (c.tipo !== "longo") i2.type = "text";
+      i2.value = it[c.k] ?? ""; if (c.max) i2.maxLength = c.max; i2.oninput = () => { it[c.k] = c.tipo === "numero" ? Number(i2.value) || 0 : i2.value; aoMudar && aoMudar(); }; d.append(i2); });
+    caixa.append(d); });
+  const add = el("button", "b3 largo", "+ " + rotuloNovo); add.type = "button"; add.onclick = () => { itens.push({}); editor(caixa, itens, campos, rotuloNovo, aoMudar); }; caixa.append(add);
+}
+function reduz(arquivo) { return new Promise((ok, falha) => { const img = new Image(); img.onload = () => { const k = Math.min(1, 1400 / Math.max(img.width, img.height)); const c = document.createElement("canvas"); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+    c.getContext("2d").drawImage(img, 0, 0, c.width, c.height); c.toBlob(b => b ? ok(b) : falha(), "image/jpeg", .82); URL.revokeObjectURL(img.src); }; img.onerror = falha; img.src = URL.createObjectURL(arquivo); }); }
+
+// página, pagamento, programação, cardápio
+const TXT = ["titulo1", "titulo2", "quando", "onde", "prazo", "traga", "aviso", "rodape"];
+function preencher() { const c = D.config;
+  TXT.forEach(k => ($("c-" + k).value = c[k] || "")); $("c-data").value = String(c.data || "").slice(0, 16); $("c-meta").value = c.meta;
+  $("c-aberto").checked = !!c.aberto; $("c-mostrarValores").checked = !!c.mostrarValores;
+  Object.keys(FAIXAS).forEach(k => ($("p-" + k).value = c.precos[k]));
+  $("x-mostrar").checked = !!c.pix.mostrar; $("x-chave").value = c.pix.chave || ""; $("x-nome").value = c.pix.nome || ""; $("x-obs").value = c.pix.obs || "";
+  editor($("ed-incluso"), c.incluso, [{ k: "icone", r: "Emoji", max: 8 }, { k: "titulo", r: "Título", max: 80 }, { k: "detalhe", r: "Detalhe (opcional)", max: 200 }], "Adicionar item");
+  editor($("ed-programacao"), c.programacao, [{ k: "hora", r: "Hora (ex.: 21h)", max: 12 }, { k: "texto", r: "O que acontece", max: 120 }], "Adicionar horário");
+  editor($("ed-cardapio"), c.cardapio, [{ k: "nome", r: "Prato", max: 80 }, { k: "descricao", r: "Descrição", tipo: "longo", max: 300 }, { tipo: "foto" }], "Adicionar prato");
+}
+function ler() { const c = D.config;
+  TXT.forEach(k => (c[k] = $("c-" + k).value)); if ($("c-data").value) c.data = $("c-data").value + ":00-05:00"; c.meta = Number($("c-meta").value) || 40;
+  c.aberto = $("c-aberto").checked; c.mostrarValores = $("c-mostrarValores").checked;
+  Object.keys(FAIXAS).forEach(k => (c.precos[k] = Number($("p-" + k).value) || 0));
+  c.pix = { mostrar: $("x-mostrar").checked, chave: $("x-chave").value, nome: $("x-nome").value, obs: $("x-obs").value }; return c; }
+document.querySelectorAll("[data-salvar]").forEach(b => (b.onclick = async () => { const m = b.nextElementSibling; b.disabled = true;
+  const j = await api("/api/admin/config", "PUT", ler()).catch(() => ({ erro: "Sem conexão com o servidor." })); b.disabled = false;
+  if (!j.ok) return avisa(m, j.erro || "Não foi possível salvar."); D.config = j.config; preencher(); avisa(m, "Salvo. Já está valendo na página.", true); }));
+
+// pessoas
+function pessoas() {
+  const ps = D.pessoas; let total = 0, pago = 0; ps.forEach(p => { total += p.valor; if (p.pago) pago += p.valor; });
+  $("n-pessoas").textContent = ps.length; $("n-total").textContent = brl(total); $("n-pago").textContent = brl(pago); $("n-falta").textContent = brl(total - pago);
+  const box = $("pessoas"); box.innerHTML = ""; const fams = {}; ps.forEach(p => (fams[p.familia] = fams[p.familia] || []).push(p));
+  const junto = $("np-junto"); junto.innerHTML = ""; junto.append(new Option("Ninguém (família nova)", ""));
+  Object.values(fams).forEach(f => { junto.append(new Option(f[0].nome, f[0].id)); const d = el("div", "fam");
+    f.forEach(p => { const l = el("div", "pes"); const a = el("div"); a.append(el("div", "n", p.nome), el("div", "d", `${FAIXAS[p.faixa]} · ${p.valor ? brl(p.valor) : "não paga"}`));
+      const ac = el("div", "acoes"); const bp = el("button", "pago " + (p.pago ? "sim" : "nao"), p.pago ? "✓ Pago" : "Falta pagar"); bp.type = "button";
+      if (!p.valor) bp.classList.add("oculto");
+      bp.onclick = async () => { bp.disabled = true; const j = await api("/api/admin/pessoa/" + p.id, "PATCH", { pago: !p.pago }).catch(() => ({})); if (j.ok) { p.pago = j.pessoa.pago; pessoas(); gastos(); } else { bp.disabled = false; avisa($("msg-pessoas"), j.erro || "Não foi possível salvar."); } };
+      const bx = el("button", "x", "✕"); bx.type = "button"; bx.title = "Tirar da lista";
+      bx.onclick = async () => { if (bx.dataset.certeza !== "1") { bx.dataset.certeza = "1"; bx.textContent = "Tirar?"; bx.style.color = "#b42318"; setTimeout(() => { bx.dataset.certeza = ""; bx.textContent = "✕"; bx.style.color = ""; }, 3000); return; }
+        const j = await api("/api/admin/pessoa/" + p.id, "DELETE").catch(() => ({})); if (j.ok) { D.pessoas = D.pessoas.filter(q => q.id !== p.id); pessoas(); gastos(); } else avisa($("msg-pessoas"), j.erro || "Não foi possível tirar."); };
+      ac.append(bp, bx); l.append(a, ac); d.append(l); });
+    box.append(d); });
+  if (!ps.length) box.append(el("p", "dica", "Ninguém confirmou ainda."));
+}
+$("np-add").onclick = async () => { const nome = $("np-nome").value.trim(); const m = $("msg-pessoas");
+  if (nome.length < 2) return avisa(m, "Escreva o nome da pessoa.");
+  const j = await api("/api/admin/pessoa", "POST", { nome, faixa: $("np-faixa").value, juntoDe: $("np-junto").value }).catch(() => ({}));
+  if (!j.ok) return avisa(m, j.erro || "Não foi possível adicionar."); D.pessoas.push(j.pessoa); $("np-nome").value = ""; pessoas(); gastos(); avisa(m, "Adicionado.", true); };
+
+// gastos
+function gastos() { const receber = D.pessoas.reduce((s, p) => s + p.valor, 0), caixa = D.pessoas.reduce((s, p) => s + (p.pago ? p.valor : 0), 0);
+  const conta = () => { const g = D.gastos.reduce((s, x) => s + (Number(x.valor) || 0), 0); $("g-receber").textContent = brl(receber); $("g-gastos").textContent = brl(g); $("g-sobra").textContent = brl(receber - g); $("g-caixa").textContent = brl(caixa); };
+  editor($("ed-gastos"), D.gastos, [{ k: "item", r: "Gasto", max: 80 }, { k: "valor", r: "Valor (R$)", tipo: "numero" }, { k: "pago", r: "Já paguei", tipo: "check" }], "Adicionar gasto", conta); conta(); }
+$("salvar-gastos").onclick = async () => { const j = await api("/api/admin/gastos", "PUT", { gastos: D.gastos }).catch(() => ({})); if (!j.ok) return avisa($("msg-gastos"), j.erro || "Não foi possível salvar."); D.gastos = j.gastos; gastos(); avisa($("msg-gastos"), "Gastos salvos.", true); };
+
+// senha
+$("trocar-senha").onclick = async () => { const m = $("msg-ns"), s = $("ns1").value;
+  if (s.length < 6) return avisa(m, "A senha precisa ter pelo menos 6 caracteres."); if (s !== $("ns2").value) return avisa(m, "As duas senhas não estão iguais.");
+  const j = await api("/api/admin/senha", "PUT", { senha: s }).catch(() => ({})); if (!j.ok) return avisa(m, j.erro || "Não foi possível trocar."); guarda.set(j.token); $("ns1").value = $("ns2").value = ""; avisa(m, "Senha trocada.", true); };
+$("sair").onclick = () => { guarda.set(""); mostrarSenha(); };
+
+guarda.get() ? abrir().then(() => { if ($("painel").classList.contains("oculto")) mostrarSenha(); }) : mostrarSenha();
+</script>
+</body>
+</html>
